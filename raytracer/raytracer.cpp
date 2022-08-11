@@ -40,7 +40,7 @@ void GenerateAndWriteJPG(const int width, const int height, const int numChannel
 	}
 
 	stbi_write_jpg("jpgTest.jpg", width, height, numChannels, data, quality);
-	delete [] data;
+	delete[] data;
 }
 
 std::string GetImagePPM(const int width, const int height)
