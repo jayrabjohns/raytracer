@@ -4,5 +4,10 @@
 #pragma once
 
 #include <iostream>
+#include <string>
 
-// TODO: Reference additional headers your program requires here.
+#define STB_IMAGE_WRITE_IMPLEMENTATION
+#include "stb_image_write.h"
+
+void GenerateAndWriteJPG(const int width, const int height, const int numChannels, const int quality = 100);
+std::string GetImagePPM(const int width, const int height);
