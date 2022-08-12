@@ -4,14 +4,14 @@
 #include <cmath>
 #include <iostream>
 
-class vec3 
+class Vec3 
 {
 public:
-	double vals[3];
+	double Vals[3];
 
 public:
-	vec3();
-	vec3(const double x, const double y, const double z);
+	Vec3();
+	Vec3(const double x, const double y, const double z);
 
 	double x() const;
 	double y() const;
@@ -22,63 +22,63 @@ public:
 
 	double operator[](const int i) const;
 	double& operator[](const int i);
-	vec3 operator-() const;
-	vec3& operator+=(const vec3& vec3);
-	vec3& operator*=(const double t);
-	vec3& operator/=(const double t);
+	Vec3 operator-() const;
+	Vec3& operator+=(const Vec3& vec3);
+	Vec3& operator*=(const double t);
+	Vec3& operator/=(const double t);
 };
 
-inline std::ostream& operator<<(std::ostream& out, const vec3& vec3) { return out << vec3.vals[0] << ' ' << vec3.vals[1] << ' ' << vec3.vals[2]; }
+inline std::ostream& operator<<(std::ostream& out, const Vec3& vec3) { return out << vec3.Vals[0] << ' ' << vec3.Vals[1] << ' ' << vec3.Vals[2]; }
 
-inline vec3 operator+(const vec3& a, const vec3& b) 
+inline Vec3 operator+(const Vec3& a, const Vec3& b) 
 {
-	return vec3(
-		a.vals[0] + b.vals[0],
-		a.vals[1] + b.vals[1],
-		a.vals[2] + b.vals[2]);
+	return Vec3(
+		a.Vals[0] + b.Vals[0],
+		a.Vals[1] + b.Vals[1],
+		a.Vals[2] + b.Vals[2]);
 }
 
-inline vec3 operator-(const vec3& a, const vec3& b) 
+inline Vec3 operator-(const Vec3& a, const Vec3& b) 
 {
-	return vec3(
-		a.vals[0] - b.vals[0],
-		a.vals[1] - b.vals[1],
-		a.vals[2] - b.vals[2]);
+	return Vec3(
+		a.Vals[0] - b.Vals[0],
+		a.Vals[1] - b.Vals[1],
+		a.Vals[2] - b.Vals[2]);
 }
 
-inline vec3 operator*(const vec3& a, const vec3& b) 
+inline Vec3 operator*(const Vec3& a, const Vec3& b) 
 {
-	return vec3::vec3(
-		a.vals[0] * b.vals[0],
-		a.vals[1] * b.vals[1],
-		a.vals[2] * b.vals[2]);
+	return Vec3::Vec3(
+		a.Vals[0] * b.Vals[0],
+		a.Vals[1] * b.Vals[1],
+		a.Vals[2] * b.Vals[2]);
 }
 
-inline vec3 operator*(const double scalar, const vec3& vec3) 
+inline Vec3 operator*(const double scalar, const Vec3& vec3) 
 {
-	return vec3::vec3(
-		scalar * vec3.vals[0],
-		scalar * vec3.vals[1],
-		scalar * vec3.vals[2]);
+	return Vec3::Vec3(
+		scalar * vec3.Vals[0],
+		scalar * vec3.Vals[1],
+		scalar * vec3.Vals[2]);
 }
 
-inline vec3 operator*(const vec3& vec3, const double scalar) { return scalar * vec3; }
+inline Vec3 operator*(const Vec3& vec3, const double scalar) { return scalar * vec3; }
 
-inline vec3 operator/(vec3 vec3, const double scalar) { return (1 / scalar) * vec3; }
+inline Vec3 operator/(Vec3 vec3, const double scalar) { return (1 / scalar) * vec3; }
 
-inline double dot(const vec3& a, const vec3& b) { return a.vals[0] * b.vals[0]+ a.vals[1] * b.vals[1] + a.vals[2] * b.vals[2]; }
+inline double dot(const Vec3& a, const Vec3& b) { return a.Vals[0] * b.Vals[0]+ a.Vals[1] * b.Vals[1] + a.Vals[2] * b.Vals[2]; }
 
-inline vec3 cross(const vec3& a, const vec3& b)
+inline Vec3 cross(const Vec3& a, const Vec3& b)
 {
-	return vec3(
-		a.vals[1] * b.vals[2] - a.vals[2] * b.vals[1],
-		a.vals[2] * b.vals[0] - a.vals[0] * b.vals[2],
-		a.vals[0] * b.vals[1] - a.vals[1] * b.vals[0]);
+	return Vec3(
+		a.Vals[1] * b.Vals[2] - a.Vals[2] * b.Vals[1],
+		a.Vals[2] * b.Vals[0] - a.Vals[0] * b.Vals[2],
+		a.Vals[0] * b.Vals[1] - a.Vals[1] * b.Vals[0]);
 }
 
-inline vec3 normalise(const vec3 vec3) { return vec3 / vec3.length(); }
+inline Vec3 Normalise(const Vec3 vec3) { return vec3 / vec3.length(); }
 
 // Type aliases
-using point3 = vec3; // 3D Point
-using colour = vec3; // RGB Colour
+using Point3 = Vec3; // 3D Point
+using Colour = Vec3;
 #endif

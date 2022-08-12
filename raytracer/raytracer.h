@@ -1,13 +1,13 @@
-﻿// raytracer.h : Include file for standard system include files,
-// or project specific include files.
+#ifndef RAYTRACER_H
+#define RAYTRACER_H
 
-#pragma once
-
-#include <iostream>
-#include <string>
-
-#define STB_IMAGE_WRITE_IMPLEMENTATION
-#include "stb_image_write.h"
-
-void GenerateAndWriteJPG(const int width, const int height, const int numChannels, const int quality = 100);
-std::string GetImagePPM(const int width, const int height);
+#include "ray.h"
+class Raytracer
+{
+public:
+	Colour GetRayColour(const Ray& ray);
+	void RenderDemo(const int width, const int height, const int quality);
+	void GenerateAndWriteJPGDemo(const int width, const int height, const int numChannels, const int quality = 100);
+	std::string GetImagePPM(const int width, const int height);
+};
+#endif 
