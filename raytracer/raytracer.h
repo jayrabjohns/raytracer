@@ -6,7 +6,7 @@ class Raytracer
 {
 public:
 	Colour GetRayColour(const Ray& ray);
-	void RenderDemo(const int width, const int height, const int quality);
+	void CircleDemo(const int width, const int height, const int quality);
 	void GenerateAndWriteJPGDemo(const int width, const int height, const int numChannels, const int quality = 100);
 	std::string GetImagePPM(const int width, const int height);
 };

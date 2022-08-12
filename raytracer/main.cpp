@@ -1,8 +1,15 @@
 ﻿#include<iostream>
 
+#include "main.h"
 #include "raytracer.h"
 
 int main()
+{
+	CircleDemo();
+	return 0;
+}
+
+void CircleDemo()
 {
 	const int imageWidth = 400;
 	const double aspectRatio = 16.0 / 9.0;
@@ -10,11 +17,9 @@ int main()
 	const int quality = 100;
 
 	Raytracer raytracer = Raytracer();
-	raytracer.RenderDemo(imageWidth, aspectRatio, quality);
+	raytracer.CircleDemo(imageWidth, aspectRatio, quality);
 
 	std::cerr << "Done." << std::endl;
-
-	return 0;
 }
 
 void JpegDemo()

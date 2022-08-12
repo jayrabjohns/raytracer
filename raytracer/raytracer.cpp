@@ -6,7 +6,7 @@
 #define STB_IMAGE_WRITE_IMPLEMENTATION
 #include "stb_image_write.h"
 
-bool HitSphere(const Point3& centre, double radius, const Ray& ray)
+double HitSphere(const Point3& centre, const double radius, const Ray& ray)
 {
 	// Chapter 5.1
 	Vec3 oc = ray.Origin - centre;
@@ -14,53 +14,58 @@ bool HitSphere(const Point3& centre, double radius, const Ray& ray)
 	double b = 2.0 * dot(oc, ray.Direction);
 	double c = dot(oc, oc) - radius * radius;
 	double discriminant = b * b - 4.0 * a * c;
-	return (discriminant > 0.0);
+
+	// Chapter 6
+	return (discriminant < 0.0 ? -1.0 : (-b - std::sqrt(discriminant)) / (2.0*a));
 }
 
 Colour Raytracer::GetRayColour(const Ray& ray)
 {
-	if (HitSphere(Point3(0.0, 0.0, -1.0), 0.5, ray))
+	double t = HitSphere(Point3(0.0, 0.0, -1.0), 0.5, ray);
+	if (t > 0.0)
 	{
-		return Colour(1.0, 0.0, 0.0);
+		Vec3 normal = Normalise(ray.at(t) - Vec3(0.0, 0.0, -1.0));
+		return 0.5 * Colour(normal.x() + 1, normal.y() + 1, normal.z() + 1);
 	}
 
 	Vec3 dir = Normalise(ray.Direction);
-	double t = 0.5 * (dir.y() + 1.0);
+	t = 0.5 * (dir.y() + 1.0);
 	return (1.0 - t) * Colour(1.0, 1.0, 1.0) + t * Colour(0.5, 0.7, 1.0);
 }
 
-void Raytracer::RenderDemo(const int width, const int aspectRatio, const int quality)
+void Raytracer::CircleDemo(const int width, const int aspectRatio, const int quality)
 {
-	const int height = static_cast<int>(width / aspectRatio);
+	int height = static_cast<int>(width / aspectRatio);
 
 	// Camera
-	const double viewPortHeight = 2.0;
-	const double viewPortWidth = aspectRatio * viewPortHeight;
-	const double focalLength = 1.0;
+	double viewPortHeight = 2.0;
+	double viewPortWidth = aspectRatio * viewPortHeight;
+	double focalLength = 1.0;
 
 	// Scene
-	const Point3 origin = Point3();
-	const Vec3 horizontal = Vec3(viewPortWidth, 0.0, 0.0);
-	const Vec3 vertical = Vec3(0.0, viewPortHeight, 0.0);
-	const Vec3 lowerLeft = origin - (horizontal / 2.0) - (vertical / 2.0) - Vec3(0.0, 0.0, focalLength);
+	Point3 origin = Point3();
+	Vec3 horizontal = Vec3(viewPortWidth, 0.0, 0.0);
+	Vec3 vertical = Vec3(0.0, viewPortHeight, 0.0);
+	Vec3 lowerLeft = origin - (horizontal / 2.0) - (vertical / 2.0) - Vec3(0.0, 0.0, focalLength);
 
-	const int numChannels = 3;
+	// Render
+	int numChannels = 3;
 	uint8_t* data = new uint8_t[width * height * numChannels];
 	int index = 0;
 
 	for (size_t i = 0; i < height; i++)
 	{
-		std::cerr << "\rScanlines remaining: " << (height - i) << ' ' << std::flush;
+		//std::cerr << "\rScanlines remaining: " << (height - i) << ' ' << std::flush;
 		for (size_t j = 0; j < width; j++)
 		{
-			const double u = double(i) / (width - 1);
-			const double v = double(j) / (height - 1);
+			double u = double(i) / (width - 1);
+			double v = double(j) / (height - 1);
 
 			Ray r = Ray(origin, lowerLeft + u * horizontal + v * vertical - origin);
-			Colour pixleColour = GetRayColour(r) * 255;
-			data[index++] = pixleColour.x();
-			data[index++] = pixleColour.y();
-			data[index++] = pixleColour.z();
+			Colour pixleColour = GetRayColour(r) * 255.0;
+			data[index++] = static_cast<uint8_t>(pixleColour.x());
+			data[index++] = static_cast<uint8_t>(pixleColour.y());
+			data[index++] = static_cast<uint8_t>(pixleColour.z());
 		}
 	}
 
@@ -78,13 +83,13 @@ void Raytracer::GenerateAndWriteJPGDemo(const int width, const int height, const
 		std::cerr << "\rScanlines remaining: " << i << ' ' << std::flush;
 		for (size_t j = 0; j < width; j++)
 		{
-			const double r = double(i) / (width - 1);
-			const double g = double(j) / (height - 1);
-			const double b = 0.25;
+			double r = double(i) / (width - 1);
+			double g = double(j) / (height - 1);
+			double b = 0.25;
 
-			const int rInt = static_cast<int>(255.999 * r);
-			const int gInt = static_cast<int>(255.999 * g);
-			const int bInt = static_cast<int>(255.999 * b);
+			int rInt = static_cast<int>(255.999 * r);
+			int gInt = static_cast<int>(255.999 * g);
+			int bInt = static_cast<int>(255.999 * b);
 
 			data[index++] = rInt;
 			data[index++] = gInt;

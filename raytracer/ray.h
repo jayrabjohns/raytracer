@@ -13,6 +13,6 @@ public:
 	Ray();
 	Ray(const Point3& origin, const Vec3& direction);
 
-	Point3 at(const double scalar) const;
+	Point3 at(const double t) const;
 };
 #endif

@@ -3,4 +3,5 @@
 
 #pragma once
 
+void CircleDemo();
 void JpegDemo();
