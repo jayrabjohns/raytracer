@@ -10,13 +10,13 @@ double HitSphere(const Point3& centre, const double radius, const Ray& ray)
 {
 	// Chapter 5.1
 	Vec3 oc = ray.Origin - centre;
-	double a = dot(ray.Direction, ray.Direction);
-	double b = 2.0 * dot(oc, ray.Direction);
-	double c = dot(oc, oc) - radius * radius;
-	double discriminant = b * b - 4.0 * a * c;
+	double a = ray.Direction.lengthSqr();
+	double bHalf = dot(oc, ray.Direction);
+	double c = oc.lengthSqr() - radius * radius;
+	double discriminant = bHalf * bHalf - a * c;
 
 	// Chapter 6
-	return (discriminant < 0.0 ? -1.0 : (-b - std::sqrt(discriminant)) / (2.0*a));
+	return (discriminant < 0.0 ? -1.0 : (-bHalf - std::sqrt(discriminant)) / a);
 }
 
 Colour Raytracer::GetRayColour(const Ray& ray)
