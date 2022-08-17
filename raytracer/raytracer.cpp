@@ -80,7 +80,7 @@ void Raytracer::CircleDemo()
 		}
 	}
 
-	stbi_write_jpg("..\\..\\..\\..\\out.jpg", width, height, numChannels, data, quality);
+	stbi_write_png("..\\..\\..\\..\\out.png", width, height, numChannels, data, width * numChannels);
 	delete[] data;
 }
 
