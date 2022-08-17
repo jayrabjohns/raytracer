@@ -38,16 +38,16 @@ Colour Raytracer::GetRayColour(const Ray& ray, const Scene& scene)
 void Raytracer::CircleDemo()
 {
 	// Image
-	int width = 400;
+	int width = 800;
 	double aspectRatio = 16.0 / 9.0;
 	int height = static_cast<int>(width / aspectRatio);
 	int numChannels = 3;
 	int quality = 100;
 
 	// World
-	Scene scene = Scene();
-	scene.Add(std::make_shared<Sphere>(Point3(0.0, 1.0, -1.0), 0.5));
-	scene.Add(std::make_shared<Sphere>(Point3(0.0, 0.0, -100.0), 100));
+	Scene scene;
+	scene.Add(std::make_shared<Sphere>(Point3(0.0, 0.0, -1.0), 0.5));
+	scene.Add(std::make_shared<Sphere>(Point3(0.0, -100.5, -1.0), 100));
 
 	// Camera
 	double viewPortHeight = 2.0;
@@ -64,13 +64,13 @@ void Raytracer::CircleDemo()
 	uint8_t* data = new uint8_t[width * height * numChannels];
 	int index = 0;
 
-	for (size_t i = 0; i < height; i++)
+	for (int i = height - 1; i >= 0; --i)
 	{
 		//std::cerr << "\rScanlines remaining: " << (height - i) << ' ' << std::flush;
-		for (size_t j = 0; j < width; j++)
+		for (int j = 0; j < width; ++j)
 		{
-			double u = double(i) / (width - 1);
-			double v = double(j) / (height - 1);
+			double u = double(j) / (width - 1);
+			double v = double(i) / (height - 1);
 
 			Ray ray = Ray(origin, lowerLeft + u * horizontal + v * vertical - origin);
 			Colour pixleColour = GetRayColour(ray, scene) * 255.0;
