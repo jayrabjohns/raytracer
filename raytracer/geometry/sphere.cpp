@@ -3,16 +3,14 @@
 Sphere::Sphere() : Centre(Point3()), Radius(0.0) {}
 Sphere::Sphere(const Point3 centre, const double radius) : Centre(centre), Radius(radius) {}
 
-inline bool InBoundsInclusive(const double val, const double min, const double max) { return min <= val && val <= max; }
-
 inline bool TryGetClosestRoot(const double discriminant, const double halfB, const double a, const double tMin, const double tMax, double& root)
 {
 	double discriminantSqrt = std::sqrt(discriminant);
-	root = (-halfB + discriminantSqrt) / a;
+	root = (-halfB - discriminantSqrt) / a;
 
 	if (!InBoundsInclusive(root, tMin, tMax))
 	{
-		root = (-halfB - discriminantSqrt) / a;
+		root = (-halfB + discriminantSqrt) / a;
 		if (!InBoundsInclusive(root, tMin, tMax))
 		{
 			root = 0.0;

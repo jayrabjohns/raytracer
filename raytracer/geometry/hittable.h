@@ -21,4 +21,6 @@ public:
 	virtual bool IsHit(const Ray& ray, const double tMin, const double tMax, HitRecord& hitRecord) const = 0;
 };
 
+inline bool InBoundsInclusive(const double val, const double min, const double max) { return min <= val && val <= max; }
+
 #endif

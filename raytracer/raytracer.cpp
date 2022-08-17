@@ -1,6 +1,7 @@
 #include <iostream>
 #include <string>
 
+#include "geometry/plane.h"
 #include "geometry/scene.h"
 #include "geometry/sphere.h"
 #include "raytracer.h"
@@ -40,14 +41,19 @@ void Raytracer::CircleDemo()
 	// Image
 	int width = 800;
 	double aspectRatio = 16.0 / 9.0;
-	int height = static_cast<int>(width / aspectRatio);
-	int numChannels = 3;
-	int quality = 100;
 
 	// World
 	Scene scene;
+	//scene.Add(std::make_shared<Sphere>(Point3(0.0, -100.5, -1.0), 100));
+	scene.Add(std::make_shared<Plane>(Point3(1.0, -5.0, 0.0), Point3(0.0, -5.0, 0.0), Point3(0.0, -5.0, -1.0), 0.0));
 	scene.Add(std::make_shared<Sphere>(Point3(0.0, 0.0, -1.0), 0.5));
-	scene.Add(std::make_shared<Sphere>(Point3(0.0, -100.5, -1.0), 100));
+
+	Render(width, aspectRatio, scene);
+}
+
+void Raytracer::Render(const int width, const int aspectRatio, const Scene& scene)
+{
+	int height = static_cast<int>(width / aspectRatio);
 
 	// Camera
 	double viewPortHeight = 2.0;
@@ -61,6 +67,7 @@ void Raytracer::CircleDemo()
 	Vec3 lowerLeft = origin - (horizontal / 2.0) - (vertical / 2.0) - Vec3(0.0, 0.0, focalLength);
 
 	// Render
+	int numChannels = 3;
 	uint8_t* data = new uint8_t[width * height * numChannels];
 	int index = 0;
 
