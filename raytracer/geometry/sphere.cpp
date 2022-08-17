@@ -1,4 +1,4 @@
-#include "sphere.h"
+#include "sphere.hpp"
 
 Sphere::Sphere() : Centre(Point3()), Radius(0.0) {}
 Sphere::Sphere(const Point3 centre, const double radius) : Centre(centre), Radius(radius) {}

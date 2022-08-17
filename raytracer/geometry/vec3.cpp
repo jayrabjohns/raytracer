@@ -1,4 +1,4 @@
-#include "vec3.h"
+#include "vec3.hpp"
 
 Vec3::Vec3() : Vals{ 0.0, 0.0, 0.0 } {}
 Vec3::Vec3(const double x, const double y, const double z) : Vals{ x, y, z } {}

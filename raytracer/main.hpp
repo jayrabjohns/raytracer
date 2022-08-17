@@ -3,6 +3,6 @@
 
 #pragma once
 
-#include "geometry/scene.h"
+#include "geometry/scene.hpp"
 
 void GetCircleDemoScene(Scene& scene);

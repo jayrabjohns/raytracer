@@ -1,8 +1,8 @@
 #ifndef RAYTRACER_H
 #define RAYTRACER_H
 
-#include "geometry/ray.h"
-#include "geometry/scene.h"
+#include "geometry/ray.hpp"
+#include "geometry/scene.hpp"
 class Raytracer
 {
 public:

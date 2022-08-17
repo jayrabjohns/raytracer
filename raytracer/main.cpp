@@ -1,9 +1,9 @@
 ﻿#include<iostream>
 
-#include "main.h"
-#include "raytracer.h"
-#include "geometry/plane.h"
-#include "geometry/sphere.h"
+#include "main.hpp"
+#include "raytracer.hpp"
+#include "geometry/plane.hpp"
+#include "geometry/sphere.hpp"
 
 int main()
 {

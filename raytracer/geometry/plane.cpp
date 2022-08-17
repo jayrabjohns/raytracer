@@ -1,4 +1,4 @@
-#include "plane.h"
+#include "plane.hpp"
 
 Plane::Plane(const Point3& a, const Point3& b, const Point3& c) : A(a), B(b), C(c) {}
 

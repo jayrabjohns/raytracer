@@ -1,4 +1,4 @@
-#include "scene.h"
+#include "scene.hpp"
 
 Scene::Scene() {}
 Scene::Scene(const std::shared_ptr<Hittable> hittable) { Objects.push_back(hittable); }

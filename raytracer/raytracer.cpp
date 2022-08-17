@@ -1,11 +1,11 @@
 #include <iostream>
 #include <string>
 
-#include "geometry/plane.h"
-#include "geometry/scene.h"
-#include "geometry/sphere.h"
-#include "raytracer.h"
-#include "utils/math_utils.h"
+#include "geometry/plane.hpp"
+#include "geometry/scene.hpp"
+#include "geometry/sphere.hpp"
+#include "raytracer.hpp"
+#include "utils/math_utils.hpp"
 
 #define STB_IMAGE_WRITE_IMPLEMENTATION
 #include "image_creation/stb_image_write.h"

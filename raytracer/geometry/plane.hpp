@@ -1,7 +1,7 @@
 #ifndef PLANE_H
 #define PLANE_H
 
-#include "hittable.h"
+#include "hittable.hpp"
 
 class Plane : public Hittable
 {
