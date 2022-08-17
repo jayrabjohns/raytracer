@@ -35,7 +35,8 @@ bool Sphere::IsHit(const Ray& ray, const double tMin, const double tMax, HitReco
 	{
 		hitRecord.t = root;
 		hitRecord.Point = ray.at(root);
-		hitRecord.Normal = (hitRecord.Point - Centre) / Radius;
+		Vec3 outwardNormal = (hitRecord.Point - Centre) / Radius;
+		hitRecord.SetFaceNormal(ray, outwardNormal);
 
 		return true;
 	}

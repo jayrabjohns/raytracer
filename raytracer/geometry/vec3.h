@@ -80,5 +80,5 @@ inline Vec3 Normalise(const Vec3 vec3) { return vec3 / vec3.length(); }
 
 // Type aliases
 using Point3 = Vec3; // 3D Point
-using Colour = Vec3;
+using Colour = Vec3; // RGB Colour
 #endif

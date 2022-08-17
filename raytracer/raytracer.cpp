@@ -1,10 +1,13 @@
 #include <iostream>
 #include <string>
 
+#include "geometry/scene.h"
+#include "geometry/sphere.h"
 #include "raytracer.h"
+#include "utils/math_utils.h"
 
 #define STB_IMAGE_WRITE_IMPLEMENTATION
-#include "stb_image_write.h"
+#include "image_creation/stb_image_write.h"
 
 double HitSphere(const Point3& centre, const double radius, const Ray& ray)
 {
@@ -19,23 +22,32 @@ double HitSphere(const Point3& centre, const double radius, const Ray& ray)
 	return (discriminant < 0.0 ? -1.0 : (-bHalf - std::sqrt(discriminant)) / a);
 }
 
-Colour Raytracer::GetRayColour(const Ray& ray)
+Colour Raytracer::GetRayColour(const Ray& ray, const Scene& scene)
 {
-	double t = HitSphere(Point3(0.0, 0.0, -1.0), 0.5, ray);
-	if (t > 0.0)
+	HitRecord hitRecord;
+	if (scene.IsHit(ray, 0.0, infinity, hitRecord))
 	{
-		Vec3 normal = Normalise(ray.at(t) - Vec3(0.0, 0.0, -1.0));
-		return 0.5 * Colour(normal.x() + 1, normal.y() + 1, normal.z() + 1);
+		return 0.5 * (hitRecord.Normal + Colour(1.0, 1.0, 1.0));
 	}
 
 	Vec3 dir = Normalise(ray.Direction);
-	t = 0.5 * (dir.y() + 1.0);
+	double t = 0.5 * (dir.y() + 1.0);
 	return (1.0 - t) * Colour(1.0, 1.0, 1.0) + t * Colour(0.5, 0.7, 1.0);
 }
 
-void Raytracer::CircleDemo(const int width, const int aspectRatio, const int quality)
+void Raytracer::CircleDemo()
 {
+	// Image
+	int width = 400;
+	double aspectRatio = 16.0 / 9.0;
 	int height = static_cast<int>(width / aspectRatio);
+	int numChannels = 3;
+	int quality = 100;
+
+	// World
+	Scene scene = Scene();
+	scene.Add(std::make_shared<Sphere>(Point3(0.0, 1.0, -1.0), 0.5));
+	scene.Add(std::make_shared<Sphere>(Point3(0.0, 0.0, -100.0), 100));
 
 	// Camera
 	double viewPortHeight = 2.0;
@@ -49,7 +61,6 @@ void Raytracer::CircleDemo(const int width, const int aspectRatio, const int qua
 	Vec3 lowerLeft = origin - (horizontal / 2.0) - (vertical / 2.0) - Vec3(0.0, 0.0, focalLength);
 
 	// Render
-	int numChannels = 3;
 	uint8_t* data = new uint8_t[width * height * numChannels];
 	int index = 0;
 
@@ -61,8 +72,8 @@ void Raytracer::CircleDemo(const int width, const int aspectRatio, const int qua
 			double u = double(i) / (width - 1);
 			double v = double(j) / (height - 1);
 
-			Ray r = Ray(origin, lowerLeft + u * horizontal + v * vertical - origin);
-			Colour pixleColour = GetRayColour(r) * 255.0;
+			Ray ray = Ray(origin, lowerLeft + u * horizontal + v * vertical - origin);
+			Colour pixleColour = GetRayColour(ray, scene) * 255.0;
 			data[index++] = static_cast<uint8_t>(pixleColour.x());
 			data[index++] = static_cast<uint8_t>(pixleColour.y());
 			data[index++] = static_cast<uint8_t>(pixleColour.z());

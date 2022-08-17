@@ -11,13 +11,8 @@ int main()
 
 void CircleDemo()
 {
-	const int imageWidth = 400;
-	const double aspectRatio = 16.0 / 9.0;
-	const int numChannels = 3;
-	const int quality = 100;
-
 	Raytracer raytracer = Raytracer();
-	raytracer.CircleDemo(imageWidth, aspectRatio, quality);
+	raytracer.CircleDemo();
 
 	std::cerr << "Done." << std::endl;
 }

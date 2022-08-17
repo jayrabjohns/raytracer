@@ -4,7 +4,7 @@
 cmake_minimum_required (VERSION 3.8)
 
 # Add source to this project's executable.
-add_executable (raytracer "main.cpp" "main.h" "stb_image.h" "stb_image_write.h" "vec3.h" "vec3.cpp"   "ray.h" "ray.cpp" "raytracer.h" "raytracer.cpp"   "hittable.h" "sphere.h" "sphere.cpp")
+add_executable (raytracer "main.cpp" "main.h" "image_creation/stb_image.h" "image_creation/stb_image_write.h" "geometry/vec3.h" "geometry/vec3.cpp"   "geometry/ray.h" "geometry/ray.cpp" "raytracer.h" "raytracer.cpp"   "geometry/hittable.h" "geometry/sphere.h" "geometry/sphere.cpp" "geometry/scene.h" "geometry/scene.cpp" "utils/math_utils.h")
 
 if (CMAKE_VERSION VERSION_GREATER 3.12)
   set_property(TARGET raytracer PROPERTY CXX_STANDARD 20)
