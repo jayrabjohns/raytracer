@@ -3,5 +3,6 @@
 
 #pragma once
 
-void CircleDemo();
-void JpegDemo();
+#include "geometry/scene.h"
+
+void GetCircleDemoScene(Scene& scene);

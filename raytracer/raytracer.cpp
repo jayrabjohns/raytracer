@@ -10,19 +10,6 @@
 #define STB_IMAGE_WRITE_IMPLEMENTATION
 #include "image_creation/stb_image_write.h"
 
-double HitSphere(const Point3& centre, const double radius, const Ray& ray)
-{
-	// Chapter 5.1
-	Vec3 oc = ray.Origin - centre;
-	double a = ray.Direction.lengthSqr();
-	double bHalf = dot(oc, ray.Direction);
-	double c = oc.lengthSqr() - radius * radius;
-	double discriminant = bHalf * bHalf - a * c;
-
-	// Chapter 6
-	return (discriminant < 0.0 ? -1.0 : (-bHalf - std::sqrt(discriminant)) / a);
-}
-
 Colour Raytracer::GetRayColour(const Ray& ray, const Scene& scene)
 {
 	HitRecord hitRecord;
@@ -34,21 +21,6 @@ Colour Raytracer::GetRayColour(const Ray& ray, const Scene& scene)
 	Vec3 dir = Normalise(ray.Direction);
 	double t = 0.5 * (dir.y() + 1.0);
 	return (1.0 - t) * Colour(1.0, 1.0, 1.0) + t * Colour(0.5, 0.7, 1.0);
-}
-
-void Raytracer::CircleDemo()
-{
-	// Image
-	int width = 800;
-	double aspectRatio = 16.0 / 9.0;
-
-	// World
-	Scene scene;
-	//scene.Add(std::make_shared<Sphere>(Point3(0.0, -100.5, -1.0), 100));
-	scene.Add(std::make_shared<Plane>(Point3(1.0, -5.0, 0.0), Point3(0.0, -5.0, 0.0), Point3(0.0, -5.0, -1.0), 0.0));
-	scene.Add(std::make_shared<Sphere>(Point3(0.0, 0.0, -1.0), 0.5));
-
-	Render(width, aspectRatio, scene);
 }
 
 void Raytracer::Render(const int width, const int aspectRatio, const Scene& scene)
@@ -87,35 +59,7 @@ void Raytracer::Render(const int width, const int aspectRatio, const Scene& scen
 		}
 	}
 
-	stbi_write_png("..\\..\\..\\..\\out.png", width, height, numChannels, data, width * numChannels);
-	delete[] data;
-}
-
-void Raytracer::GenerateAndWriteJPGDemo(const int width, const int height, const int numChannels, const int quality)
-{
-	uint8_t* data = new uint8_t[width * height * numChannels];
-	int index = 0;
-
-	for (size_t i = 0; i < height; i++)
-	{
-		std::cerr << "\rScanlines remaining: " << i << ' ' << std::flush;
-		for (size_t j = 0; j < width; j++)
-		{
-			double r = double(i) / (width - 1);
-			double g = double(j) / (height - 1);
-			double b = 0.25;
-
-			int rInt = static_cast<int>(255.999 * r);
-			int gInt = static_cast<int>(255.999 * g);
-			int bInt = static_cast<int>(255.999 * b);
-
-			data[index++] = rInt;
-			data[index++] = gInt;
-			data[index++] = bInt;
-		}
-	}
-
-	stbi_write_jpg("jpgTest.jpg", width, height, numChannels, data, quality);
+	stbi_write_png("..\\..\\..\\..\\img\\out.png", width, height, numChannels, data, width * numChannels);
 	delete[] data;
 }
 
