@@ -14,8 +14,8 @@ Based on: [Ray Tracing In One Weekend](https://raytracing.github.io/books/RayTra
 
 ### 2. Adding geometry
 
-![Adding geometry](/img/2_adding_geometry.png?raw=true "Adding geometry")
+![Adding geometry](/img/2_adding_geometry.jpg?raw=true "Adding geometry")
 
 ### 1. Creating an Image
 
-![Creating and image](/img/1_creating_an_image.png?raw=true "Creating an image")
+![Creating and image](/img/1_creating_an_image.jpg?raw=true "Creating an image")
