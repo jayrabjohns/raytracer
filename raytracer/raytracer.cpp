@@ -1,14 +1,13 @@
 #include <iostream>
 #include <string>
 
-#include "geometry/plane.hpp"
-#include "geometry/scene.hpp"
-#include "geometry/sphere.hpp"
 #include "raytracer.hpp"
+#include "geometry/plane.hpp"
+#include "geometry/sphere.hpp"
 #include "utils/math_utils.hpp"
 
 #define STB_IMAGE_WRITE_IMPLEMENTATION
-#include "image_creation/stb_image_write.h"
+#include "stb/stb_image_write.h"
 
 Colour Raytracer::GetRayColour(const Ray& ray, const Scene& scene)
 {
@@ -23,22 +22,9 @@ Colour Raytracer::GetRayColour(const Ray& ray, const Scene& scene)
 	return (1.0 - t) * Colour(1.0, 1.0, 1.0) + t * Colour(0.5, 0.7, 1.0);
 }
 
-void Raytracer::Render(const int width, const int aspectRatio, const Scene& scene)
+void Raytracer::Render(const int width, const double aspectRatio, const double samplesPerPixel, const Scene& scene)
 {
 	int height = static_cast<int>(width / aspectRatio);
-
-	// Camera
-	double viewPortHeight = 2.0;
-	double viewPortWidth = aspectRatio * viewPortHeight;
-	double focalLength = 1.0;
-
-	// Scene
-	Point3 origin = Point3();
-	Vec3 horizontal = Vec3(viewPortWidth, 0.0, 0.0);
-	Vec3 vertical = Vec3(0.0, viewPortHeight, 0.0);
-	Vec3 lowerLeft = origin - (horizontal / 2.0) - (vertical / 2.0) - Vec3(0.0, 0.0, focalLength);
-
-	// Render
 	int numChannels = 3;
 	uint8_t* data = new uint8_t[width * height * numChannels];
 	int index = 0;
@@ -48,14 +34,24 @@ void Raytracer::Render(const int width, const int aspectRatio, const Scene& scen
 		//std::cerr << "\rScanlines remaining: " << (height - i) << ' ' << std::flush;
 		for (int j = 0; j < width; ++j)
 		{
-			double u = double(j) / (width - 1);
-			double v = double(i) / (height - 1);
+			Colour pixelColour;
+			for (size_t s = 0; s < samplesPerPixel; ++s)
+			{
+				double u = (j + RandomDouble01()) / (width - 1);
+				double v = (i + RandomDouble01()) / (height - 1);
 
-			Ray ray = Ray(origin, lowerLeft + u * horizontal + v * vertical - origin);
-			Colour pixleColour = GetRayColour(ray, scene) * 255.0;
-			data[index++] = static_cast<uint8_t>(pixleColour.x());
-			data[index++] = static_cast<uint8_t>(pixleColour.y());
-			data[index++] = static_cast<uint8_t>(pixleColour.z());
+				Ray ray = scene.camera.get()->RayAt(u, v);
+				pixelColour += GetRayColour(ray, scene);
+			}
+
+			pixelColour /= samplesPerPixel;
+			double r = Clamp(pixelColour.x(), 0.0, 0.999);
+			double g = Clamp(pixelColour.y(), 0.0, 0.999);
+			double b = Clamp(pixelColour.z(), 0.0, 0.999);
+
+			data[index++] = static_cast<uint8_t>(256.0 * r);
+			data[index++] = static_cast<uint8_t>(256.0 * g);
+			data[index++] = static_cast<uint8_t>(256.0 * b);
 		}
 	}
 

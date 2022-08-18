@@ -4,5 +4,6 @@
 #pragma once
 
 #include "geometry/scene.hpp"
+#include "camera.hpp"
 
-void GetCircleDemoScene(Scene& scene);
+void DemoScene(Scene& scene, Camera* camera);

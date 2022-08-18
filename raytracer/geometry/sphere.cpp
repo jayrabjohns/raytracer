@@ -29,7 +29,7 @@ bool Sphere::IsHit(const Ray& ray, const double tMin, const double tMax, HitReco
 	double discriminant = halfB * halfB - a * c;
 
 	double root;
-	if (discriminant >= 0 && TryGetClosestRoot(discriminant, halfB, a, tMin, tMax, root))
+	if (discriminant >= 0.0 && TryGetClosestRoot(discriminant, halfB, a, tMin, tMax, root))
 	{
 		hitRecord.t = root;
 		hitRecord.Point = ray.at(root);
