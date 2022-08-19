@@ -8,8 +8,8 @@
 class Raytracer
 {
 public:
-	Colour GetRayColour(const Ray& ray, const Scene& scene);
-	void Render(const int width, const double aspectRatio, const double samplesPerPixel, const Scene& scene);
+	Colour GetRayColour(const Ray& ray, const Scene& scene, const int depth);
+	void Render(const int width, const double aspectRatio, const double samplesPerPixel, const int maxRayBounces, const Scene& scene);
 	std::string GetImagePPM(const int width, const int height);
 };
 #endif 

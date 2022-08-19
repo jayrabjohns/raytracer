@@ -30,4 +30,10 @@ Vec3& Vec3::operator*=(const double t)
 	return *this;
 }
 
-Vec3& Vec3::operator/=(const double t) { return *this *= 1 / t; }
+Vec3& Vec3::operator/=(const double t) 
+{ 
+	Vals[0] /= t;
+	Vals[1] /= t;
+	Vals[2] /= t;
+	return *this;
+}

@@ -9,12 +9,15 @@
 #define STB_IMAGE_WRITE_IMPLEMENTATION
 #include "stb/stb_image_write.h"
 
-Colour Raytracer::GetRayColour(const Ray& ray, const Scene& scene)
+Colour Raytracer::GetRayColour(const Ray& ray, const Scene& scene, const int depth)
 {
+	if (depth <= 0) { return Colour(0.0, 0.0, 0.0); }
+
 	HitRecord hitRecord;
-	if (scene.IsHit(ray, 0.0, infinity, hitRecord))
+	if (scene.IsHit(ray, 0.001, infinity, hitRecord))
 	{
-		return 0.5 * (hitRecord.Normal + Colour(1.0, 1.0, 1.0));
+		Point3 target = hitRecord.Point + hitRecord.Normal + Sphere::RandomPointInHemiSphere(hitRecord.Normal);
+		return 0.5 * GetRayColour(Ray(hitRecord.Point, target - hitRecord.Point), scene, depth - 1);
 	}
 
 	Vec3 dir = Normalise(ray.Direction);
@@ -22,7 +25,7 @@ Colour Raytracer::GetRayColour(const Ray& ray, const Scene& scene)
 	return (1.0 - t) * Colour(1.0, 1.0, 1.0) + t * Colour(0.5, 0.7, 1.0);
 }
 
-void Raytracer::Render(const int width, const double aspectRatio, const double samplesPerPixel, const Scene& scene)
+void Raytracer::Render(const int width, const double aspectRatio, const double samplesPerPixel, const int maxRayBounces, const Scene& scene)
 {
 	int height = static_cast<int>(width / aspectRatio);
 	int numChannels = 3;
@@ -31,7 +34,7 @@ void Raytracer::Render(const int width, const double aspectRatio, const double s
 
 	for (int i = height - 1; i >= 0; --i)
 	{
-		//std::cerr << "\rScanlines remaining: " << (height - i) << ' ' << std::flush;
+		std::cout << "\rScanlines remaining: " << (i) << ' ' << std::flush;
 		for (int j = 0; j < width; ++j)
 		{
 			Colour pixelColour;
@@ -41,17 +44,23 @@ void Raytracer::Render(const int width, const double aspectRatio, const double s
 				double v = (i + RandomDouble01()) / (height - 1);
 
 				Ray ray = scene.camera.get()->RayAt(u, v);
-				pixelColour += GetRayColour(ray, scene);
+				pixelColour += GetRayColour(ray, scene, maxRayBounces);
 			}
 
 			pixelColour /= samplesPerPixel;
-			double r = Clamp(pixelColour.x(), 0.0, 0.999);
-			double g = Clamp(pixelColour.y(), 0.0, 0.999);
-			double b = Clamp(pixelColour.z(), 0.0, 0.999);
 
-			data[index++] = static_cast<uint8_t>(256.0 * r);
-			data[index++] = static_cast<uint8_t>(256.0 * g);
-			data[index++] = static_cast<uint8_t>(256.0 * b);
+			// Gamma-correct for gamma = 2.0
+			double r = std::sqrt(pixelColour.x());
+			double g = std::sqrt(pixelColour.y());
+			double b = std::sqrt(pixelColour.z());
+
+			r = 256.0 * Clamp(r, 0.0, 0.999);
+			g = 256.0 * Clamp(g, 0.0, 0.999);
+			b = 256.0 * Clamp(b, 0.0, 0.999);
+
+			data[index++] = static_cast<uint8_t>(r);
+			data[index++] = static_cast<uint8_t>(g);
+			data[index++] = static_cast<uint8_t>(b);
 		}
 	}
 

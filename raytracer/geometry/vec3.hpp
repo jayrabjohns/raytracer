@@ -4,6 +4,8 @@
 #include <cmath>
 #include <iostream>
 
+#include "../utils/math_utils.hpp"
+
 class Vec3 
 {
 public:
@@ -26,6 +28,10 @@ public:
 	Vec3& operator+=(const Vec3& vec3);
 	Vec3& operator*=(const double t);
 	Vec3& operator/=(const double t);
+
+	inline static Vec3 Random01() { return Vec3(RandomDouble01(), RandomDouble01(), RandomDouble01()); }
+
+	inline static Vec3 Random(double min, double max) { return Vec3(RandomDouble(min, max), RandomDouble(min, max), RandomDouble(min, max)); }
 };
 
 inline std::ostream& operator<<(std::ostream& out, const Vec3& vec3) { return out << vec3.Vals[0] << ' ' << vec3.Vals[1] << ' ' << vec3.Vals[2]; }
@@ -77,6 +83,8 @@ inline Vec3 cross(const Vec3& a, const Vec3& b)
 }
 
 inline Vec3 Normalise(const Vec3 vec3) { return vec3 / vec3.length(); }
+
+//inline Vec3 RandomUnitVector() { return Normalise(Sphere::RandomPointInUnitSphere());/*Normalise(Vec3::Random01());*/ }
 
 // Type aliases
 using Point3 = Vec3; // 3D Point
