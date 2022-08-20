@@ -21,6 +21,9 @@ public:
 
 	double length() const;
 	double lengthSqr() const;
+	Vec3 Normalised() const;
+	bool isNearZero() const;
+	Vec3 reflect(const Vec3& normal);
 
 	double operator[](const int i) const;
 	double& operator[](const int i);

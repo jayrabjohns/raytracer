@@ -16,8 +16,12 @@ Colour Raytracer::GetRayColour(const Ray& ray, const Scene& scene, const int dep
 	HitRecord hitRecord;
 	if (scene.IsHit(ray, 0.001, infinity, hitRecord))
 	{
-		Point3 target = hitRecord.point + hitRecord.normal + Sphere::RandomPointInHemiSphere(hitRecord.normal);
-		return 0.5 * GetRayColour(Ray(hitRecord.point, target - hitRecord.point), scene, depth - 1);
+		Ray scattered;
+		Colour attenuation;
+		if (hitRecord.material->Scatter(ray, hitRecord, attenuation, scattered))
+		{
+			return attenuation * GetRayColour(scattered, scene, depth - 1);
+		}
 	}
 
 	Vec3 dir = Normalise(ray.direction);
