@@ -6,8 +6,8 @@
 class Ray
 {
 public:
-	Point3 Origin;
-	Vec3 Direction;
+	Point3 origin;
+	Vec3 direction;
 
 public:
 	Ray();

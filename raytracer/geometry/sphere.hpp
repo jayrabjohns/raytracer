@@ -7,8 +7,8 @@
 class Sphere : public Hittable
 {
 public:
-	Point3 Centre;
-	double Radius;
+	Point3 centre;
+	double radius;
 
 public:
 	Sphere();

@@ -11,7 +11,7 @@ class Scene
 {
 public:
 	std::shared_ptr<Camera> camera;
-	std::vector<std::shared_ptr<Hittable>> Objects;
+	std::vector<std::shared_ptr<Hittable>> objects;
 
 public:
 	Scene();

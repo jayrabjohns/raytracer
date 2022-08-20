@@ -2,17 +2,21 @@
 #define HITTABLE_H
 
 #include "ray.hpp"
+#include "../materials/material.hpp"
+
+class Material;
 
 struct HitRecord {
-	Point3 Point;
-	Vec3 Normal;
+	Point3 point;
+	Vec3 normal;
+	std::shared_ptr<Material> material;
 	double t;
-	bool IsFrontFace;
+	bool isFrontFace;
 
 	inline void SetFaceNormal(const Ray& ray, const Vec3& outwardNormal) 
 	{
-		IsFrontFace = dot(ray.Direction, outwardNormal) < 0;
-		Normal = IsFrontFace ? outwardNormal : -outwardNormal;
+		isFrontFace = dot(ray.direction, outwardNormal) < 0;
+		normal = isFrontFace ? outwardNormal : -outwardNormal;
 	}
 };
 

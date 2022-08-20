@@ -16,11 +16,11 @@ Colour Raytracer::GetRayColour(const Ray& ray, const Scene& scene, const int dep
 	HitRecord hitRecord;
 	if (scene.IsHit(ray, 0.001, infinity, hitRecord))
 	{
-		Point3 target = hitRecord.Point + hitRecord.Normal + Sphere::RandomPointInHemiSphere(hitRecord.Normal);
-		return 0.5 * GetRayColour(Ray(hitRecord.Point, target - hitRecord.Point), scene, depth - 1);
+		Point3 target = hitRecord.point + hitRecord.normal + Sphere::RandomPointInHemiSphere(hitRecord.normal);
+		return 0.5 * GetRayColour(Ray(hitRecord.point, target - hitRecord.point), scene, depth - 1);
 	}
 
-	Vec3 dir = Normalise(ray.Direction);
+	Vec3 dir = Normalise(ray.direction);
 	double t = 0.5 * (dir.y() + 1.0);
 	return (1.0 - t) * Colour(1.0, 1.0, 1.0) + t * Colour(0.5, 0.7, 1.0);
 }
