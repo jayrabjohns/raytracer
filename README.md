@@ -10,7 +10,7 @@ Based on: [Ray Tracing In One Weekend](https://raytracing.github.io/books/RayTra
 
 ### 5. Adding metals (shiny)
 
-![Metal material](/img/5_metals.png.png?raw=true "Metal material")
+![Metal material](/img/5_metals.png?raw=true "Metal material")
 
 ### 4. Adding diffuse meterials
 
