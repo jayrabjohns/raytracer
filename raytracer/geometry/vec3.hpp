@@ -30,6 +30,7 @@ public:
 	Vec3 operator-() const;
 	Vec3& operator+=(const Vec3& vec3);
 	Vec3& operator*=(const double t);
+	Vec3& operator*=(const Vec3& vec3);
 	Vec3& operator/=(const double t);
 
 	inline static Vec3 Random01() { return Vec3(RandomDouble01(), RandomDouble01(), RandomDouble01()); }

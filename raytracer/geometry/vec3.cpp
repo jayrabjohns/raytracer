@@ -52,6 +52,14 @@ Vec3& Vec3::operator*=(const double t)
 	return *this;
 }
 
+Vec3& Vec3::operator*=(const Vec3& vec3)
+{
+	values[0] *= vec3.values[0];
+	values[1] *= vec3.values[1];
+	values[2] *= vec3.values[2];
+	return *this;
+}
+
 Vec3& Vec3::operator/=(const double t) 
 { 
 	values[0] /= t;

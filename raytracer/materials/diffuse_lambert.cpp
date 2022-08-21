@@ -1,7 +1,7 @@
 #include "diffuse_lambert.hpp"
 #include "../geometry/sphere.hpp"
 
-DiffuseLambert::DiffuseLambert(const Colour& albedo) :albedo(albedo) {}
+DiffuseLambert::DiffuseLambert(const Colour& albedo) : albedo(albedo) {}
 
 bool DiffuseLambert::Scatter(const Ray& ray, const HitRecord& hitRecord, Colour& attenuation, Ray& scattered) const
 {

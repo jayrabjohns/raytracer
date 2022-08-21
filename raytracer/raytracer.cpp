@@ -9,8 +9,16 @@
 #define STB_IMAGE_WRITE_IMPLEMENTATION
 #include "stb/stb_image_write.h"
 
+inline Colour GetBackgroundColour(const Ray& ray)
+{
+	Vec3 dir = Normalise(ray.direction);
+	double t = 0.5 * (dir.y() + 1.0);
+	return (1.0 - t) * Colour(1.0, 1.0, 1.0) + t * Colour(0.5, 0.7, 1.0);
+}
+
 Colour Raytracer::GetRayColour(const Ray& ray, const Scene& scene, const int depth)
 {
+#if false
 	if (depth <= 0) { return Colour(0.0, 0.0, 0.0); }
 
 	HitRecord hitRecord;
@@ -24,9 +32,32 @@ Colour Raytracer::GetRayColour(const Ray& ray, const Scene& scene, const int dep
 		}
 	}
 
-	Vec3 dir = Normalise(ray.direction);
-	double t = 0.5 * (dir.y() + 1.0);
-	return (1.0 - t) * Colour(1.0, 1.0, 1.0) + t * Colour(0.5, 0.7, 1.0);
+	return GetBackgroundColour(ray)
+#else
+	Ray r = ray;
+	Colour rayColour = GetBackgroundColour(r);
+
+	bool hit = false;
+	Ray scattered;
+	Colour attenuation;
+	HitRecord hitRecord;
+	for (int d = depth; d >= 0; --d)
+	{
+		if (d == 0) { return Colour(0.0, 0.0, 0.0); }
+		else if (scene.IsHit(r, 0.001, infinity, hitRecord))
+		{
+			hit = true;
+			if (hitRecord.material->Scatter(r, hitRecord, attenuation, scattered))
+			{
+				r = scattered;
+				rayColour *= attenuation;
+			}
+		}
+		else break;
+	}
+
+	return rayColour;
+#endif
 }
 
 void Raytracer::Render(const int width, const double aspectRatio, const double samplesPerPixel, const int maxRayBounces, const Scene& scene)
@@ -35,7 +66,9 @@ void Raytracer::Render(const int width, const double aspectRatio, const double s
 	int numChannels = 3;
 	uint8_t* data = new uint8_t[width * height * numChannels];
 	int index = 0;
-
+	
+	//double getColourElapsedTime = 0.0;
+	//int samples = 0;
 	for (int i = height - 1; i >= 0; --i)
 	{
 		std::cout << "\rScanlines remaining: " << (i) << ' ' << std::flush;
@@ -48,7 +81,15 @@ void Raytracer::Render(const int width, const double aspectRatio, const double s
 				double v = (i + RandomDouble01()) / (height - 1);
 
 				Ray ray = scene.camera.get()->RayAt(u, v);
+
+				//time_t start, end;
+				//time(&start);
 				pixelColour += GetRayColour(ray, scene, maxRayBounces);
+				//time(&end);
+
+				//auto dur = double(end - start);
+				//getColourElapsedTime += dur;
+				//samples++;
 			}
 
 			pixelColour /= samplesPerPixel;
@@ -67,6 +108,8 @@ void Raytracer::Render(const int width, const double aspectRatio, const double s
 			data[index++] = static_cast<uint8_t>(b);
 		}
 	}
+
+	//std::cout << "\nAverage get ray colour time: " << (getColourElapsedTime / double(samples))<< std::endl;
 
 	stbi_write_png("..\\..\\..\\..\\img\\out.png", width, height, numChannels, data, width * numChannels);
 	delete[] data;
