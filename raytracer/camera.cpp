@@ -1,7 +1,7 @@
 #include "camera.hpp"
 #include "utils/math_utils.hpp"
 
-Camera::Camera() : Camera::Camera(Point3(0.0, 0.0, 0.0), Point3(0.0, 0.0, -1.0), Vector3(0.0, 1.0, 0.0), 90.0, 16.0 / 9.0, 1.0, 1.0, 0.0, infinity) {}
+Camera::Camera() : Camera::Camera(Point3(0.0, 0.0, 0.0), Point3(0.0, 0.0, -1.0), Vector3(0.0, 1.0, 0.0), 90.0, 16.0 / 9.0, 0.0, 1.0, 0.0, infinity) {}
 
 Camera::Camera(const Point3 origin, const Point3 lookAt, const Vector3 camUp, double verticalFovDegs, double aspectRatio, double aperture, double focusDist, double nearClippingPlane, double farClippingPlane)
 {

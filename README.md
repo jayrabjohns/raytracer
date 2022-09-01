@@ -8,9 +8,13 @@ Based on: [Ray Tracing In One Weekend](https://raytracing.github.io/books/RayTra
 
 ## Earlier renders timeline
 
-### 7. Defocus blur
+### 8. Defocus blur
 
-![Defocus blur](/img/7_defocus_blur?raw=true "Defocus blur")
+![Defocus blur](/img/8_defocus_blur.png?raw=true "Defocus blur")
+
+### 7. Dielectrics (refraction) 
+
+![Glass ball](/img/7_glass_ball.png?raw=true "Glass ball")
 
 ### 6. Fuzzy metals
 

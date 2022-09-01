@@ -21,7 +21,7 @@ int main()
 	double aperture = 2.0;
 	double distToFocus = (lookFrom - lookAt).length();
 
-	auto camera = std::make_shared<Camera>(lookFrom, lookAt, Vector3(0.0, 1.0, 0.0), 20.0, aspectRatio, aperture, distToFocus, 0.0, infinity);
+	auto camera = std::make_shared<Camera>(/*lookFrom, lookAt, Vector3(0.0, 1.0, 0.0), 20.0, aspectRatio, aperture, distToFocus, 0.0, infinity*/);
 	Scene scene = Scene(camera);
 	DemoScene(scene, camera.get());
 
