@@ -11,7 +11,7 @@
 
 inline Colour GetBackgroundColour(const Ray& ray)
 {
-	Vec3 dir = Normalise(ray.direction);
+	Vector3 dir = Normalise(ray.direction);
 	double t = 0.5 * (dir.y() + 1.0);
 	return (1.0 - t) * Colour(1.0, 1.0, 1.0) + t * Colour(0.5, 0.7, 1.0);
 }
@@ -19,6 +19,7 @@ inline Colour GetBackgroundColour(const Ray& ray)
 Colour Raytracer::GetRayColour(const Ray& ray, const Scene& scene, const int depth)
 {
 #if false
+	// Recursive
 	if (depth <= 0) { return Colour(0.0, 0.0, 0.0); }
 
 	HitRecord hitRecord;
@@ -34,6 +35,7 @@ Colour Raytracer::GetRayColour(const Ray& ray, const Scene& scene, const int dep
 
 	return GetBackgroundColour(ray)
 #else
+	// Iterative
 	Ray r = ray;
 	Colour rayColour = GetBackgroundColour(r);
 

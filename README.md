@@ -8,6 +8,14 @@ Based on: [Ray Tracing In One Weekend](https://raytracing.github.io/books/RayTra
 
 ## Earlier renders timeline
 
+### 7. Defocus blur
+
+![Defocus blur](/img/7_defocus_blur?raw=true "Defocus blur")
+
+### 6. Fuzzy metals
+
+![Fuzzy metal material](/img/6_fuzzy_metals.png?raw=true "Metal material")
+
 ### 5. Adding metals (shiny)
 
 ![Metal material](/img/5_metals.png?raw=true "Metal material")

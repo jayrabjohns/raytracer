@@ -7,7 +7,7 @@ Metal::Metal(const Colour& albedo, const double fuzziness) : albedo(albedo), fuz
 
 bool Metal::Scatter(const Ray& ray, const HitRecord& hitRecord, Colour& attenuation, Ray& scattered) const
 {
-	Vec3 reflected = ray.direction.Normalised().reflect(hitRecord.normal);
+	Vector3 reflected = ray.direction.Normalised().reflect(hitRecord.normal);
 	scattered = Ray(hitRecord.point, reflected + fuzziness * Sphere::RandomPointInUnitSphere());
 	attenuation = albedo;
 

@@ -5,7 +5,7 @@ DiffuseLambert::DiffuseLambert(const Colour& albedo) : albedo(albedo) {}
 
 bool DiffuseLambert::Scatter(const Ray& ray, const HitRecord& hitRecord, Colour& attenuation, Ray& scattered) const
 {
-	Vec3 scatterDir = hitRecord.normal + Sphere::RandomPointInHemiSphere(hitRecord.normal);
+	Vector3 scatterDir = hitRecord.normal + Sphere::RandomPointInHemiSphere(hitRecord.normal);
 
 	if (scatterDir.isNearZero())
 		scatterDir = hitRecord.normal;

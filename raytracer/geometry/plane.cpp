@@ -4,7 +4,7 @@ Plane::Plane(const Point3& a, const Point3& b, const Point3& c) : a(a), b(b), c(
 
 bool Plane::IsHit(const Ray& ray, const double tMin, const double tMax, HitRecord& hitRecord) const
 {
-	Vec3 planeNormal = -cross(a - b, b - c);
+	Vector3 planeNormal = -cross(a - b, b - c);
 	double rayDot = dot(ray.direction, planeNormal);
 
 	// Considered parallel if dot lies

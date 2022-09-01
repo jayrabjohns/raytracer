@@ -8,12 +8,12 @@ class Material;
 
 struct HitRecord {
 	Point3 point;
-	Vec3 normal;
+	Vector3 normal;
 	std::shared_ptr<Material> material;
 	double t;
 	bool isFrontFace;
 
-	inline void SetFaceNormal(const Ray& ray, const Vec3& outwardNormal) 
+	inline void SetFaceNormal(const Ray& ray, const Vector3& outwardNormal) 
 	{
 		isFrontFace = dot(ray.direction, outwardNormal) < 0;
 		normal = isFrontFace ? outwardNormal : -outwardNormal;

@@ -22,7 +22,7 @@ inline bool TryGetClosestRoot(const double discriminant, const double halfB, con
 
 bool Sphere::IsHit(const Ray& ray, const double tMin, const double tMax, HitRecord& hitRecord) const
 {
-	Vec3 oc = ray.origin - centre;
+	Vector3 oc = ray.origin - centre;
 	double a = ray.direction.lengthSqr();
 	double halfB = dot(oc, ray.direction);
 	double c = oc.lengthSqr() - radius * radius;
@@ -33,7 +33,7 @@ bool Sphere::IsHit(const Ray& ray, const double tMin, const double tMax, HitReco
 	{
 		hitRecord.t = root;
 		hitRecord.point = ray.at(root);
-		Vec3 outwardNormal = (hitRecord.point - centre) / radius;
+		Vector3 outwardNormal = (hitRecord.point - centre) / radius;
 		hitRecord.SetFaceNormal(ray, outwardNormal);
 		hitRecord.material = material;
 

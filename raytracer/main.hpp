@@ -7,3 +7,4 @@
 #include "camera.hpp"
 
 void DemoScene(Scene& scene, Camera* camera);
+void RedGreenScene(Scene& scene, Camera* camera);
