@@ -8,6 +8,9 @@ Based on: [Ray Tracing In One Weekend](https://raytracing.github.io/books/RayTra
 
 ## Earlier renders timeline
 
+### 9. Loads of spheres
+![Loads of spheres](/img/9_big_scene.png?raw=true "Loads of spheres")
+
 ### 8. Defocus blur
 
 ![Defocus blur](/img/8_defocus_blur.png?raw=true "Defocus blur")

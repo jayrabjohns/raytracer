@@ -6,5 +6,6 @@
 #include "geometry/scene.hpp"
 #include "camera.hpp"
 
+void RandomScene(Scene& scene, Camera* camera);
 void DemoScene(Scene& scene, Camera* camera);
 void RedGreenScene(Scene& scene, Camera* camera);
