@@ -15,14 +15,7 @@ int main()
 	int samplesPerPixel = 32;
 	int maxRayDepth = 500;
 
-	Point3 lookFrom = Point3(13.0, 2.0, 3.0);
-	Point3 lookAt = Point3(0.0, 0.0, 0.0);
-	Point3 camUp = Point3(0.0, 1.0, 0.0);
-	double aspectRatio = 3.0 / 2.0;
-	double aperture = 0.1;
-	double distToFocus = 10.0;//(lookFrom - lookAt).length();
-
-	auto camera = std::make_shared<Camera>(lookFrom, lookAt, camUp, 20.0, aspectRatio, aperture, distToFocus, 0.0, infinity);
+	auto camera = std::make_shared<Camera>();
 	Scene scene = Scene(camera);
 	RandomScene(scene, camera.get());
 
@@ -60,6 +53,18 @@ std::shared_ptr<Sphere> GenRandomSphere(double x, double y, double z, double xLe
 
 void RandomScene(Scene& scene, Camera* camera)
 {
+	// Camera
+	Point3 lookFrom = Point3(13.0, 2.0, 3.0);
+	Point3 lookAt = Point3(0.0, 0.0, 0.0);
+	Point3 camUp = Point3(0.0, 1.0, 0.0);
+	double vFov = 20.0;
+	double aspectRatio = 3.0 / 2.0;
+	double aperture = 0.1;
+	double distToFocus = 10.0;
+
+	camera->Init(lookFrom, lookAt, camUp, vFov, aspectRatio, aperture, distToFocus, 0.0, infinity);
+
+	// Scene
 	auto groundMat = std::make_shared<DiffuseLambert>(Colour(0.5, 0.5, 0.5));
 	auto ground = std::make_shared<Sphere>(Point3(0.0, -1000.0, 0.0), 1000.0, groundMat);
 	scene.Add(ground);

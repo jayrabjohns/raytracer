@@ -5,6 +5,11 @@ Camera::Camera() : Camera::Camera(Point3(0.0, 0.0, 0.0), Point3(0.0, 0.0, -1.0),
 
 Camera::Camera(const Point3 origin, const Point3 lookAt, const Vector3 camUp, double verticalFovDegs, double aspectRatio, double aperture, double focusDist, double nearClippingPlane, double farClippingPlane)
 {
+	Init(origin, lookAt, camUp, verticalFovDegs, aspectRatio, aperture, focusDist, nearClippingPlane, farClippingPlane);
+}
+
+void Camera::Init(const Point3 origin, const Point3 lookAt, const Vector3 camUp, double verticalFovDegs, double aspectRatio, double aperture, double focusDist, double nearClippingPlane, double farClippingPlane)
+{
 	this->camUp = camUp;
 	this->aspectRatio = aspectRatio;
 	this->aperture = aperture;

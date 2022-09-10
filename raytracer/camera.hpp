@@ -29,6 +29,7 @@ private:
 public:
 	Camera();
 	Camera(const Point3 origin, const Point3 lookAt, const Vector3 camUp, double verticalFovDegs, double aspectRatio, double aperture, double focusDist, double nearClippingPlane, double farClippingPlane);
+	void Init(const Point3 origin, const Point3 lookAt, const Vector3 camUp, double verticalFovDegs, double aspectRatio, double aperture, double focusDist, double nearClippingPlane, double farClippingPlane);
 
 	Ray RayAt(double u, double v) const;
 
