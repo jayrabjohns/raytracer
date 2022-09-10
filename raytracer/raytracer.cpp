@@ -1,5 +1,6 @@
 #include <iostream>
 #include <string>
+#include <thread>
 
 #include "raytracer.hpp"
 #include "geometry/plane.hpp"
@@ -62,39 +63,35 @@ Colour Raytracer::GetRayColour(const Ray& ray, const Scene& scene, const int dep
 #endif
 }
 
-void Raytracer::Render(const int width, const double aspectRatio, const double samplesPerPixel, const int maxRayBounces, const Scene& scene)
+double Raytracer::RenderSync(const imageOptions& imageOptions, const Scene& scene, const char* filePath)
 {
-	int height = static_cast<int>(width / aspectRatio);
+	int height = (int)(imageOptions.width / scene.camera.get()->aspectRatio);
 	int numChannels = 3;
-	uint8_t* data = new uint8_t[width * height * numChannels];
+	uint8_t* data = new uint8_t[imageOptions.width * height * numChannels];
 	int index = 0;
-	
-	//double getColourElapsedTime = 0.0;
-	//int samples = 0;
+
+	double elapsedTime = 0.0;
+	time_t start, end;
+	time(&start);
+
 	for (int i = height - 1; i >= 0; --i)
 	{
-		std::cout << "\rScanlines remaining: " << (i) << ' ' << std::flush;
-		for (int j = 0; j < width; ++j)
+#ifndef RAYTRACER_NO_PROGRESS_BAR
+		std::cout << "\r[" << elapsedTime << "s] Scanlines remaining: " << (i) << ' ' << std::flush;
+#endif // PROGRESS_BAR
+		for (int j = 0; j < imageOptions.width; ++j)
 		{
 			Colour pixelColour;
-			for (size_t s = 0; s < samplesPerPixel; ++s)
+			for (size_t s = 0; s < imageOptions.samplesPerPixel; ++s)
 			{
-				double u = (j + RandomDouble01()) / (width - 1);
+				double u = (j + RandomDouble01()) / (imageOptions.width - 1);
 				double v = (i + RandomDouble01()) / (height - 1);
 
 				Ray ray = scene.camera.get()->RayAt(u, v);
-
-				//time_t start, end;
-				//time(&start);
-				pixelColour += GetRayColour(ray, scene, maxRayBounces);
-				//time(&end);
-
-				//auto dur = double(end - start);
-				//getColourElapsedTime += dur;
-				//samples++;
+				pixelColour += GetRayColour(ray, scene, imageOptions.maxRayBounces);
 			}
 
-			pixelColour /= samplesPerPixel;
+			pixelColour /= imageOptions.samplesPerPixel;
 
 			// Gamma-correct for gamma = 2.0
 			double r = std::sqrt(pixelColour.x());
@@ -109,38 +106,110 @@ void Raytracer::Render(const int width, const double aspectRatio, const double s
 			data[index++] = static_cast<uint8_t>(g);
 			data[index++] = static_cast<uint8_t>(b);
 		}
+#ifndef RAYTRACER_NO_PROGRESS_BAR
+		time(&end);
+		elapsedTime = double(end - start);
+#endif // PROGRESS_BAR
 	}
 
-	//std::cout << "\nAverage get ray colour time: " << (getColourElapsedTime / double(samples))<< std::endl;
+	time(&end);
+	elapsedTime = double(end - start);
 
-	stbi_write_png("..\\..\\..\\..\\img\\out.png", width, height, numChannels, data, width * numChannels);
+	stbi_write_png(filePath, imageOptions.width, height, numChannels, data, imageOptions.width * numChannels);
 	delete[] data;
+
+	return elapsedTime;
 }
 
-std::string Raytracer::GetImagePPM(const int width, const int height)
+void Raytracer::RenderChunk(renderOptions renderOps)
 {
-	std::string out = "";
+	const int numChannels = 3;
+	uint8_t* chunkData = new uint8_t[(renderOps.endRow - renderOps.startRow) * renderOps.imgOps.width * numChannels];
+	int index = 0;
 
-	out += "P3\n";
-	out += std::to_string(width) + ' ' + std::to_string(height) + '\n';
-	out += "255\n";
-
-	for (size_t i = 0; i < height; i++)
+	for (int i = renderOps.endRow - 1; i >= renderOps.startRow; --i)
 	{
-		std::cout << "\rScanlines remaining: " << i << ' ' << std::flush;
-		for (size_t j = 0; j < width; j++)
+		for (int j = 0; j < renderOps.imgOps.width; ++j)
 		{
-			double r = double(i) / (width - 1);
-			double g = double(j) / (height - 1);
-			double b = 0.25;
+			Colour pixelColour;
+			for (size_t s = 0; s < renderOps.imgOps.samplesPerPixel; ++s)
+			{
+				double u = (j + RandomDouble01()) / (renderOps.imgOps.width - 1);
+				double v = (i + RandomDouble01()) / (renderOps.height - 1);
 
-			int rInt = static_cast<int>(255.999 * r);
-			int gInt = static_cast<int>(255.999 * g);
-			int bInt = static_cast<int>(255.999 * b);
+				Ray ray = renderOps.scene.camera.get()->RayAt(u, v);
+				pixelColour += GetRayColour(ray, renderOps.scene, renderOps.imgOps.maxRayBounces);
+			}
 
-			out += rInt + ' ' + gInt + ' ' + bInt + ' ';
+			pixelColour /= renderOps.imgOps.samplesPerPixel;
+
+			// Gamma-correct for gamma = 2.0
+			double r = std::sqrt(pixelColour.x());
+			double g = std::sqrt(pixelColour.y());
+			double b = std::sqrt(pixelColour.z());
+
+			r = 256.0 * Clamp(r, 0.0, 0.999);
+			g = 256.0 * Clamp(g, 0.0, 0.999);
+			b = 256.0 * Clamp(b, 0.0, 0.999);
+
+			chunkData[index++] = static_cast<uint8_t>(r);
+			chunkData[index++] = static_cast<uint8_t>(g);
+			chunkData[index++] = static_cast<uint8_t>(b);
 		}
-		out += '\n';
 	}
-	return out;
+
+	renderOps.dataMutex.lock();
+	for (int i = (renderOps.startRow * renderOps.imgOps.width * numChannels), cI = 0; cI < index; ++i, ++cI)
+	{
+		renderOps.data[i] = chunkData[cI];
+	}
+	renderOps.dataMutex.unlock();
+
+	delete[] chunkData;
+}
+
+double Raytracer::RenderAsync(const imageOptions& imgOps, const Scene& scene, const char* filePath)
+{
+	int height = 451;//(int)(imgOps.width / scene.camera.get()->aspectRatio);
+	int numChannels = 3;
+	uint8_t* data = new uint8_t[imgOps.width * height * numChannels];
+	std::mutex dataMutex;
+
+	unsigned int hardwareThreads = std::thread::hardware_concurrency();
+	unsigned int threadsNum = 2;//(hardwareThreads != 0 ? hardwareThreads : 1);
+	std::thread* threads = new std::thread[threadsNum];
+
+	renderOptions renderOps(imgOps, height, scene, 0, height, data, dataMutex);
+
+	double elapsedTime = 0.0;
+	time_t start, end;
+	time(&start);
+
+	int chunkSize = height / threadsNum;
+	int lastChunkSize = chunkSize + height % threadsNum;
+	for (size_t i = 0; i < threadsNum - 1; ++i)
+	{
+		renderOps.startRow = i * chunkSize;
+		renderOps.endRow = renderOps.startRow + chunkSize;
+		threads[i] = std::thread(&Raytracer::RenderChunk, renderOps);
+	}
+
+	renderOps.startRow = height - lastChunkSize;
+	renderOps.endRow = height;
+	threads[threadsNum - 1] = std::thread(&Raytracer::RenderChunk, renderOps);
+
+	for (size_t i = 0; i < threadsNum; ++i)
+	{
+		threads[i].join();
+	}
+
+	time(&end);
+	elapsedTime = double(end - start);
+
+	stbi_write_png(filePath, renderOps.imgOps.width, height, numChannels, data, renderOps.imgOps.width * numChannels);
+
+	delete[] threads;
+	delete[] data;
+
+	return elapsedTime;
 }
