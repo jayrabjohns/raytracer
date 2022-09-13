@@ -12,17 +12,17 @@
 
 int main()
 {
-	imageOptions imageOptions;
-	imageOptions.width = 800;
-	imageOptions.samplesPerPixel = 32;
-	imageOptions.maxRayBounces = 50;
+	imageOptions imageOps;
+	imageOps.width = 800;
+	imageOps.samplesPerPixel = 32;
+	imageOps.maxRayBounces = 50;
 
 	auto camera = std::make_shared<Camera>();
 	Scene scene = Scene(camera);
-	DemoScene(scene, camera.get());
+	DemoScene(scene);
 
 	Raytracer raytracer = Raytracer();
-	double timeElapsed = raytracer.Render(imageOptions, scene, "..\\..\\..\\..\\img\\out.png");
+	double timeElapsed = raytracer.Render(imageOps, scene, "..\\..\\..\\..\\img\\out.png");
 
 	std::cerr << "\nDone." << std::endl;
 	std::cout << "Total time: " << timeElapsed << 's' << std::endl;
@@ -54,7 +54,7 @@ std::shared_ptr<Sphere> GenRandomSphere(double x, double y, double z, double xLe
 	}
 }
 
-void RandomScene(Scene& scene, Camera* camera)
+void RandomScene(Scene& scene)
 {
 	// Camera
 	Point3 lookFrom = Point3(13.0, 2.0, 3.0);
@@ -65,7 +65,7 @@ void RandomScene(Scene& scene, Camera* camera)
 	double aperture = 0.1;
 	double distToFocus = 10.0;
 
-	camera->Init(lookFrom, lookAt, camUp, vFov, aspectRatio, aperture, distToFocus, 0.0, infinity);
+	scene.camera.get()->Init(lookFrom, lookAt, camUp, vFov, aspectRatio, aperture, distToFocus, 0.0, infinity);
 
 	// Scene
 	auto groundMat = std::make_shared<DiffuseLambert>(Colour(0.5, 0.5, 0.5));
@@ -97,7 +97,7 @@ void RandomScene(Scene& scene, Camera* camera)
 	scene.Add(sphere3);
 }
 
-void DemoScene(Scene& scene, Camera* camera)
+void DemoScene(Scene& scene)
 {
 	auto groundMat = std::make_shared<DiffuseLambert>(Colour(0.8, 0.8, 0.0));
 	//auto backMat = std::make_shared<DiffuseLambert>(Colour(0.7, 0.3, 0.3));
@@ -113,7 +113,7 @@ void DemoScene(Scene& scene, Camera* camera)
 	scene.Add(std::make_shared<Sphere>(Point3(1.0, 0.0, -1.0), 0.5, rightMat));
 }
 
-void RedGreenScene(Scene& scene, Camera* camera)
+void RedGreenScene(Scene& scene)
 {
 	auto leftMat = std::make_shared<DiffuseLambert>(Colour(0.0, 0.0, 1.0));
 	auto rightMat = std::make_shared<DiffuseLambert>(Colour(1.0, 0.0, 0.0));

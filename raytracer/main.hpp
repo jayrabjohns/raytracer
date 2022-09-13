@@ -1,11 +1,10 @@
-﻿// raytracer.h : Include file for standard system include files,
-// or project specific include files.
-
-#pragma once
+﻿#ifndef MAIN_H
+#define MAIN_H
 
 #include "geometry/scene.hpp"
-#include "camera.hpp"
 
-void RandomScene(Scene& scene, Camera* camera);
-void DemoScene(Scene& scene, Camera* camera);
-void RedGreenScene(Scene& scene, Camera* camera);
+void RandomScene(Scene& scene);
+void DemoScene(Scene& scene);
+void RedGreenScene(Scene& scene);
+
+#endif // !MAIN_H

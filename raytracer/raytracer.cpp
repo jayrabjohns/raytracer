@@ -17,26 +17,8 @@ inline Colour GetBackgroundColour(const Ray& ray)
 	return (1.0 - t) * Colour(1.0, 1.0, 1.0) + t * Colour(0.5, 0.7, 1.0);
 }
 
-Colour Raytracer::GetRayColour(const Ray& ray, const Scene& scene, const int depth)
+Colour Raytracer::GetRayColour(const Ray& ray, const Scene& scene, const int maxDepth)
 {
-#if false
-	// Recursive
-	if (depth <= 0) { return Colour(0.0, 0.0, 0.0); }
-
-	HitRecord hitRecord;
-	if (scene.IsHit(ray, 0.001, infinity, hitRecord))
-	{
-		Ray scattered;
-		Colour attenuation;
-		if (hitRecord.material->Scatter(ray, hitRecord, attenuation, scattered))
-		{
-			return attenuation * GetRayColour(scattered, scene, depth - 1);
-		}
-	}
-
-	return GetBackgroundColour(ray)
-#else
-	// Iterative
 	Ray r = ray;
 	Colour rayColour = GetBackgroundColour(r);
 
@@ -44,9 +26,9 @@ Colour Raytracer::GetRayColour(const Ray& ray, const Scene& scene, const int dep
 	Ray scattered;
 	Colour attenuation;
 	HitRecord hitRecord;
-	for (int d = depth; d >= 0; --d)
+	for (int depth = 0; depth < maxDepth; ++depth)
 	{
-		if (d == 0) { return Colour(0.0, 0.0, 0.0); }
+		if (depth == maxDepth) { return Colour(0.0, 0.0, 0.0); }
 		else if (scene.IsHit(r, 0.001, infinity, hitRecord))
 		{
 			hit = true;
@@ -60,74 +42,15 @@ Colour Raytracer::GetRayColour(const Ray& ray, const Scene& scene, const int dep
 	}
 
 	return rayColour;
-#endif
-}
-
-double Raytracer::RenderSync(const imageOptions& imageOptions, const Scene& scene, const char* filePath)
-{
-	int height = (int)(imageOptions.width / scene.camera.get()->aspectRatio);
-	int numChannels = 3;
-	uint8_t* data = new uint8_t[imageOptions.width * height * numChannels];
-	int index = 0;
-
-	double elapsedTime = 0.0;
-	time_t start, end;
-	time(&start);
-
-	for (int i = height - 1; i >= 0; --i)
-	{
-#ifndef RAYTRACER_NO_PROGRESS_BAR
-		std::cout << "\r[" << elapsedTime << "s] Scanlines remaining: " << (i) << ' ' << std::flush;
-#endif // PROGRESS_BAR
-		for (int j = 0; j < imageOptions.width; ++j)
-		{
-			Colour pixelColour;
-			for (size_t s = 0; s < imageOptions.samplesPerPixel; ++s)
-			{
-				double u = (j + RandomDouble01()) / (imageOptions.width - 1);
-				double v = (i + RandomDouble01()) / (height - 1);
-
-				Ray ray = scene.camera.get()->RayAt(u, v);
-				pixelColour += GetRayColour(ray, scene, imageOptions.maxRayBounces);
-			}
-
-			pixelColour /= imageOptions.samplesPerPixel;
-
-			// Gamma-correct for gamma = 2.0
-			double r = std::sqrt(pixelColour.x());
-			double g = std::sqrt(pixelColour.y());
-			double b = std::sqrt(pixelColour.z());
-
-			r = 256.0 * Clamp(r, 0.0, 0.999);
-			g = 256.0 * Clamp(g, 0.0, 0.999);
-			b = 256.0 * Clamp(b, 0.0, 0.999);
-
-			data[index++] = static_cast<uint8_t>(r);
-			data[index++] = static_cast<uint8_t>(g);
-			data[index++] = static_cast<uint8_t>(b);
-		}
-#ifndef RAYTRACER_NO_PROGRESS_BAR
-		time(&end);
-		elapsedTime = double(end - start);
-#endif // PROGRESS_BAR
-	}
-
-	time(&end);
-	elapsedTime = double(end - start);
-
-	stbi_write_png(filePath, imageOptions.width, height, numChannels, data, imageOptions.width * numChannels);
-	delete[] data;
-
-	return elapsedTime;
 }
 
 void Raytracer::RenderChunk(renderOptions renderOps)
 {
 	const int numChannels = 3;
-	uint8_t* chunkData = new uint8_t[(renderOps.endRow - renderOps.startRow) * renderOps.imgOps.width * numChannels];
+	uint8_t* chunkData = new uint8_t[(renderOps.endRow - renderOps.startRow) * renderOps.imgOps.width * numChannels]; // Each thread uses its own buffer to avoid loads of locking / unlocking shenanigans
 	int index = 0;
 
-	for (int i = renderOps.endRow - 1; i >= renderOps.startRow; --i)
+	for (int i = renderOps.startRow; i < renderOps.endRow; ++i)
 	{
 		for (int j = 0; j < renderOps.imgOps.width; ++j)
 		{
@@ -136,6 +59,7 @@ void Raytracer::RenderChunk(renderOptions renderOps)
 			{
 				double u = (j + RandomDouble01()) / (renderOps.imgOps.width - 1);
 				double v = (i + RandomDouble01()) / (renderOps.height - 1);
+				v = 1.0 - v; // Flipping image so +y is up
 
 				Ray ray = renderOps.scene.camera.get()->RayAt(u, v);
 				pixelColour += GetRayColour(ray, renderOps.scene, renderOps.imgOps.maxRayBounces);
@@ -158,45 +82,64 @@ void Raytracer::RenderChunk(renderOptions renderOps)
 		}
 	}
 
+	const int imgOffset = renderOps.startRow * renderOps.imgOps.width * numChannels;
+
 	renderOps.dataMutex.lock();
-	for (int i = (renderOps.startRow * renderOps.imgOps.width * numChannels), cI = 0; cI < index; ++i, ++cI)
+	for (int i = 0; i < index; ++i)
 	{
-		renderOps.data[i] = chunkData[cI];
+		int _i = i + imgOffset;
+		renderOps.data[_i] = chunkData[i];
 	}
 	renderOps.dataMutex.unlock();
 
 	delete[] chunkData;
 }
 
-double Raytracer::RenderAsync(const imageOptions& imgOps, const Scene& scene, const char* filePath)
+double Raytracer::RenderSync(const imageOptions& imgOps, const Scene& scene, const char* filePath)
 {
-	int height = 451;//(int)(imgOps.width / scene.camera.get()->aspectRatio);
-	int numChannels = 3;
-	uint8_t* data = new uint8_t[imgOps.width * height * numChannels];
+	int height = static_cast<int>(imgOps.width / scene.camera.get()->aspectRatio);
+	int colourChannels = 3;
+	uint8_t* data = new uint8_t[imgOps.width * height * colourChannels];
 	std::mutex dataMutex;
-
-	unsigned int hardwareThreads = std::thread::hardware_concurrency();
-	unsigned int threadsNum = 2;//(hardwareThreads != 0 ? hardwareThreads : 1);
-	std::thread* threads = new std::thread[threadsNum];
-
 	renderOptions renderOps(imgOps, height, scene, 0, height, data, dataMutex);
 
-	double elapsedTime = 0.0;
+	time_t start, end;
+	time(&start);
+
+	RenderChunk(renderOps);
+
+	time(&end);
+	double elapsedTime = static_cast<double>(end - start);
+
+	stbi_write_png(filePath, imgOps.width, height, colourChannels, data, imgOps.width * colourChannels);
+	delete[] data;
+
+	return elapsedTime;
+}
+
+double Raytracer::RenderAsync(const imageOptions& imgOps, const Scene& scene, const char* filePath)
+{
+	int height = static_cast<int>(imgOps.width / scene.camera.get()->aspectRatio);
+	int colourChannels = 3;
+	uint8_t* data = new uint8_t[imgOps.width * height * colourChannels];
+	std::mutex dataMutex;
+	renderOptions renderOps(imgOps, height, scene, 0, height, data, dataMutex);
+
+	unsigned int hardwareThreads = std::thread::hardware_concurrency();
+	unsigned int threadsNum = (hardwareThreads != 0 ? hardwareThreads : 1);
+	std::thread* threads = new std::thread[threadsNum];
+
 	time_t start, end;
 	time(&start);
 
 	int chunkSize = height / threadsNum;
 	int lastChunkSize = chunkSize + height % threadsNum;
-	for (size_t i = 0; i < threadsNum - 1; ++i)
+	for (size_t i = 0; i < threadsNum; ++i)
 	{
 		renderOps.startRow = i * chunkSize;
-		renderOps.endRow = renderOps.startRow + chunkSize;
+		renderOps.endRow = renderOps.startRow + (i < threadsNum ? chunkSize : lastChunkSize);
 		threads[i] = std::thread(&Raytracer::RenderChunk, renderOps);
 	}
-
-	renderOps.startRow = height - lastChunkSize;
-	renderOps.endRow = height;
-	threads[threadsNum - 1] = std::thread(&Raytracer::RenderChunk, renderOps);
 
 	for (size_t i = 0; i < threadsNum; ++i)
 	{
@@ -204,9 +147,9 @@ double Raytracer::RenderAsync(const imageOptions& imgOps, const Scene& scene, co
 	}
 
 	time(&end);
-	elapsedTime = double(end - start);
+	double elapsedTime = static_cast<double>(end - start);
 
-	stbi_write_png(filePath, renderOps.imgOps.width, height, numChannels, data, renderOps.imgOps.width * numChannels);
+	stbi_write_png(filePath, renderOps.imgOps.width, height, colourChannels, data, renderOps.imgOps.width * colourChannels);
 
 	delete[] threads;
 	delete[] data;
