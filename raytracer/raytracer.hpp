@@ -30,19 +30,10 @@ struct renderOptions
 class Raytracer
 {
 public:
-	static Colour GetRayColour(const Ray& ray, const Scene& scene, const int maxDepth);
-	static void RenderChunk(renderOptions renderOps);
-	double Render(const imageOptions& imgOps, const Scene& scene, const char* filePath)
-	{
-#ifdef RAYTRACER_USE_SINGLE_THREAD
-		return RenderSync(imgOps, scene, filePath);
-#else
-		return RenderAsync(imgOps, scene, filePath);
-#endif
-	}
+	double Render(const imageOptions& imgOps, const Scene& scene, const char* filePath, const bool useSingleThread = false);
 
 private:
-	double RenderSync(const imageOptions& imageOps, const Scene& scene, const char* filePath);
-	double RenderAsync(const imageOptions& imageOps, const Scene& scene, const char* filePath);
+	static Colour GetRayColour(const Ray& ray, const Scene& scene, const int maxDepth);
+	static void RenderChunk(renderOptions renderOps);
 };
 #endif 

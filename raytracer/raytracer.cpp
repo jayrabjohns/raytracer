@@ -10,6 +10,45 @@
 #define STB_IMAGE_WRITE_IMPLEMENTATION
 #include "stb/stb_image_write.h"
 
+double Raytracer::Render(const imageOptions& imgOps, const Scene& scene, const char* filePath, const bool useSingleThread)
+{
+	int height = static_cast<int>((imgOps.width / scene.camera.get()->aspectRatio));
+	int colourChannels = 3;
+	uint8_t* data = new uint8_t[imgOps.width * height * colourChannels];
+	std::mutex dataMutex;
+	renderOptions renderOps(imgOps, height, scene, 0, height, data, dataMutex);
+
+	unsigned int hardwareThreads = std::thread::hardware_concurrency();
+	unsigned int threadsNum = (hardwareThreads == 0 || useSingleThread ? 1 : hardwareThreads);
+	std::thread* threads = new std::thread[threadsNum];
+
+	time_t start, end;
+	time(&start);
+
+	int chunkSize = height / threadsNum;
+	for (size_t i = 0; i < threadsNum; ++i)
+	{
+		renderOps.startRow = i * chunkSize;
+		renderOps.endRow = (i == threadsNum - 1 ? height : renderOps.startRow + chunkSize);
+		threads[i] = std::thread(&Raytracer::RenderChunk, renderOps);
+	}
+
+	for (size_t i = 0; i < threadsNum; ++i)
+	{
+		threads[i].join();
+	}
+
+	time(&end);
+	double elapsedTime = static_cast<double>(end - start);
+
+	stbi_write_png(filePath, renderOps.imgOps.width, height, colourChannels, data, renderOps.imgOps.width * colourChannels);
+
+	delete[] threads;
+	delete[] data;
+
+	return elapsedTime;
+}
+
 inline Colour GetBackgroundColour(const Ray& ray)
 {
 	Vector3 dir = Normalise(ray.direction);
@@ -93,66 +132,4 @@ void Raytracer::RenderChunk(renderOptions renderOps)
 	renderOps.dataMutex.unlock();
 
 	delete[] chunkData;
-}
-
-double Raytracer::RenderSync(const imageOptions& imgOps, const Scene& scene, const char* filePath)
-{
-	int height = static_cast<int>(imgOps.width / scene.camera.get()->aspectRatio);
-	int colourChannels = 3;
-	uint8_t* data = new uint8_t[imgOps.width * height * colourChannels];
-	std::mutex dataMutex;
-	renderOptions renderOps(imgOps, height, scene, 0, height, data, dataMutex);
-
-	time_t start, end;
-	time(&start);
-
-	RenderChunk(renderOps);
-
-	time(&end);
-	double elapsedTime = static_cast<double>(end - start);
-
-	stbi_write_png(filePath, imgOps.width, height, colourChannels, data, imgOps.width * colourChannels);
-	delete[] data;
-
-	return elapsedTime;
-}
-
-double Raytracer::RenderAsync(const imageOptions& imgOps, const Scene& scene, const char* filePath)
-{
-	int height = static_cast<int>(imgOps.width / scene.camera.get()->aspectRatio);
-	int colourChannels = 3;
-	uint8_t* data = new uint8_t[imgOps.width * height * colourChannels];
-	std::mutex dataMutex;
-	renderOptions renderOps(imgOps, height, scene, 0, height, data, dataMutex);
-
-	unsigned int hardwareThreads = std::thread::hardware_concurrency();
-	unsigned int threadsNum = (hardwareThreads != 0 ? hardwareThreads : 1);
-	std::thread* threads = new std::thread[threadsNum];
-
-	time_t start, end;
-	time(&start);
-
-	int chunkSize = height / threadsNum;
-	int lastChunkSize = chunkSize + height % threadsNum;
-	for (size_t i = 0; i < threadsNum; ++i)
-	{
-		renderOps.startRow = i * chunkSize;
-		renderOps.endRow = renderOps.startRow + (i < threadsNum ? chunkSize : lastChunkSize);
-		threads[i] = std::thread(&Raytracer::RenderChunk, renderOps);
-	}
-
-	for (size_t i = 0; i < threadsNum; ++i)
-	{
-		threads[i].join();
-	}
-
-	time(&end);
-	double elapsedTime = static_cast<double>(end - start);
-
-	stbi_write_png(filePath, renderOps.imgOps.width, height, colourChannels, data, renderOps.imgOps.width * colourChannels);
-
-	delete[] threads;
-	delete[] data;
-
-	return elapsedTime;
 }
