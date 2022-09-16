@@ -4,8 +4,8 @@
 #include <mutex>
 
 #include "geometry/ray.hpp"
-#include "geometry/scene.hpp"
-#include "camera.hpp"
+#include "scene/scene.hpp"
+#include "scene/camera.hpp"
 
 struct imageOptions
 {

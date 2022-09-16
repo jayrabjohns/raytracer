@@ -1,5 +1,5 @@
 #include "camera.hpp"
-#include "utils/math_utils.hpp"
+#include "../utils/math_utils.hpp"
 
 Camera::Camera() : Camera::Camera(Point3(0.0, 0.0, 0.0), Point3(0.0, 0.0, -1.0), Vector3(0.0, 1.0, 0.0), 90.0, 16.0 / 9.0, 0.0, 1.0, 0.0, infinity) {}
 

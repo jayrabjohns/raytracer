@@ -1,8 +1,8 @@
 #ifndef CAMERA_H
 #define CAMERA_H
 
-#include "geometry/vec3.hpp"
-#include "geometry/ray.hpp"
+#include "../geometry/vec3.hpp"
+#include "../geometry/ray.hpp"
 
 class Camera
 {

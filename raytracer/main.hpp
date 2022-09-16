@@ -1,7 +1,7 @@
 ﻿#ifndef MAIN_H
 #define MAIN_H
 
-#include "geometry/scene.hpp"
+#include "scene/scene.hpp"
 
 void RandomScene(Scene& scene);
 void DemoScene(Scene& scene);

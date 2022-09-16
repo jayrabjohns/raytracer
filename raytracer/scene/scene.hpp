@@ -4,8 +4,8 @@
 #include <vector>
 #include <memory>
 
-#include "hittable.hpp"
-#include "../camera.hpp"
+#include "../geometry/hittable.hpp"
+#include "camera.hpp"
 
 class Scene
 {
