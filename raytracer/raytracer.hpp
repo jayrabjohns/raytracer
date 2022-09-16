@@ -9,9 +9,12 @@
 
 struct imageOptions
 {
-	int width;
-	int samplesPerPixel;
-	int maxRayBounces;
+	const int width;
+	const int samplesPerPixel;
+	const int maxRayBounces;
+	const int colourChannels;
+
+	imageOptions(const int width, const int samplesPerPixel, const int maxRayBounces, const int colourChannels) : width(width), samplesPerPixel(samplesPerPixel), maxRayBounces(maxRayBounces), colourChannels(colourChannels) {}
 };
 
 struct renderOptions
@@ -30,7 +33,8 @@ struct renderOptions
 class Raytracer
 {
 public:
-	double Render(const imageOptions& imgOps, const Scene& scene, const char* filePath, const bool useSingleThread = false);
+	double Render(renderOptions& renderOps, uint8_t* data, const bool useSingleThread = false);
+	double RenderPng(const imageOptions& imgOps, const Scene& scene, const char* filePath, const bool useSingleThread = false);
 
 private:
 	static Colour GetRayColour(const Ray& ray, const Scene& scene, const int maxDepth);

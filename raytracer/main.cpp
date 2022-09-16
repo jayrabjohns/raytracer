@@ -1,7 +1,6 @@
 ﻿#include<iostream>
 
 #include "main.hpp"
-//#define RAYTRACER_USE_SINGLE_THREAD
 #include "raytracer.hpp"
 #include "geometry/plane.hpp"
 #include "geometry/sphere.hpp"
@@ -12,20 +11,17 @@
 
 int main()
 {
-	imageOptions imageOps;
-	imageOps.width = 800;
-	imageOps.samplesPerPixel = 32;
-	imageOps.maxRayBounces = 50;
+	imageOptions imageOps(800, 32, 50, 3);
 
 	auto camera = std::make_shared<Camera>();
 	Scene scene = Scene(camera);
 	DemoScene(scene);
 
 	Raytracer raytracer = Raytracer();
-	double timeElapsed = raytracer.Render(imageOps, scene, "..\\..\\..\\..\\img\\out.png");
+	double elapsedSecs = raytracer.RenderPng(imageOps, scene, "..\\..\\..\\..\\img\\out.png");
 
 	std::cerr << "\nDone." << std::endl;
-	std::cout << "Total time: " << timeElapsed << 's' << std::endl;
+	std::cout << "Total time: " << elapsedSecs << 's' << std::endl;
 	return 0;
 }
 
