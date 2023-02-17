@@ -1,6 +1,8 @@
 #ifndef SPHERE_H
 #define SPHERE_H
 
+#include <memory>
+
 #include "hittable.hpp"
 #include "vec3.hpp"
 

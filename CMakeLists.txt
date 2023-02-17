@@ -1,9 +1,13 @@
-﻿# CMakeList.txt : Top-level CMake project file, do global configuration
-# and include sub-projects here.
-#
-cmake_minimum_required (VERSION 3.8)
+cmake_minimum_required(VERSION 3.8)
+project(raytrace VERSION 0.0.1)
 
-project ("raytracer")
+include(CTest)
+enable_testing()
 
-# Include sub-projects.
-add_subdirectory ("raytracer")
+include(src/main/CMakeLists.txt)
+
+add_executable(raytrace ${raytrace_SOURCES})
+
+set(CPACK_PROJECT_NAME ${PROJECT_NAME})
+set(CPACK_PROJECT_VERSION ${PROJECT_VERSION})
+include(CPack)

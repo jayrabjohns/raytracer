@@ -42,7 +42,7 @@ Vector3 Vector3::refract(const Vector3& normal, const double refractiveRatio)
 
 double Vector3::operator[](const int i) const { return values[i]; }
 double& Vector3::operator[](const int i) { return values[i]; }
-Vector3 Vector3::operator-() const { return Vector3::Vector3(-values[0], -values[1], -values[2]); }
+Vector3 Vector3::operator-() const { return Vector3(-values[0], -values[1], -values[2]); }
 
 Vector3& Vector3::operator+=(const Vector3& vec3)
 {

@@ -58,7 +58,7 @@ inline Vector3 operator-(const Vector3& a, const Vector3& b)
 
 inline Vector3 operator*(const Vector3& a, const Vector3& b) 
 {
-	return Vector3::Vector3(
+	return Vector3(
 		a.values[0] * b.values[0],
 		a.values[1] * b.values[1],
 		a.values[2] * b.values[2]);
@@ -66,7 +66,7 @@ inline Vector3 operator*(const Vector3& a, const Vector3& b)
 
 inline Vector3 operator*(const double scalar, const Vector3& vec3) 
 {
-	return Vector3::Vector3(
+	return Vector3(
 		scalar * vec3.values[0],
 		scalar * vec3.values[1],
 		scalar * vec3.values[2]);

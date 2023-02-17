@@ -1,6 +1,8 @@
 #ifndef HITTABLE_H
 #define HITTABLE_H
 
+#include <memory>
+
 #include "ray.hpp"
 #include "../materials/material.hpp"
 

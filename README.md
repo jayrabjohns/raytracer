@@ -1,12 +1,12 @@
-# Ray tracing in one weekend implementation
-
+# Ray tracing application 
 Based on: [Ray Tracing In One Weekend](https://raytracing.github.io/books/RayTracingInOneWeekend.html)
 
-## Most recent output
+## Local Setup
+This is developed on ubuntu 22 for C++17 with the cmake vscode extension.
 
-![Most recent output image](/img/out.png?raw=true "Raytraced image")
+To setup cmake with vscode, follow [this](https://code.visualstudio.com/docs/cpp/cmake-linux).
 
-## Earlier renders timeline
+## Renders timeline
 
 ### 9. Loads of spheres
 ![Loads of spheres](/img/9_big_scene.png?raw=true "Loads of spheres")

@@ -1,3 +1,5 @@
+#include <memory>
+
 #include "sphere.hpp"
 
 Sphere::Sphere() : centre(Point3()), radius(0.0) {}

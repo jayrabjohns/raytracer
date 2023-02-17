@@ -1,29 +1,15 @@
-﻿#include<iostream>
+#ifndef DEMOS_H
+#define DEMOS_H
 
-#include "main.hpp"
-#include "raytracer.hpp"
-#include "geometry/plane.hpp"
-#include "geometry/sphere.hpp"
+#include <memory>
 
-#include "materials/diffuse_lambert.hpp"
-#include "materials/metal.hpp"
-#include "materials/dielectric.hpp"
+#include "../scene/scene.hpp"
+#include "../geometry/sphere.hpp"
+#include "../materials/diffuse_lambert.hpp"
+#include "../materials/metal.hpp"
+#include "../materials/dielectric.hpp"
 
-int main()
-{
-	imageOptions imageOps(800, 32, 50, 3);
-
-	auto camera = std::make_shared<Camera>();
-	Scene scene = Scene(camera);
-	DemoScene(scene);
-
-	Raytracer raytracer = Raytracer();
-	double elapsedSecs = raytracer.RenderPng(imageOps, scene, "..\\..\\..\\..\\img\\out.png");
-
-	std::cerr << "\nDone." << std::endl;
-	std::cout << "Total time: " << elapsedSecs << 's' << std::endl;
-	return 0;
-}
+// #include "../geometry/sphere.hpp"
 
 std::shared_ptr<Sphere> GenRandomSphere(double x, double y, double z, double xLeeway, double yLeeway, double zLeeway, double radius)
 {
@@ -119,3 +105,5 @@ void RedGreenScene(Scene& scene)
 	scene.Add(std::make_shared<Sphere>(Point3(-r, 0.0, -1.0), r, leftMat));
 	scene.Add(std::make_shared<Sphere>(Point3(r, 0.0, -1.0), r, rightMat));
 }
+
+#endif

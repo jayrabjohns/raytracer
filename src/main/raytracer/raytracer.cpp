@@ -3,12 +3,14 @@
 #include <thread>
 
 #include "raytracer.hpp"
-#include "geometry/plane.hpp"
-#include "geometry/sphere.hpp"
-#include "utils/math_utils.hpp"
+#include "../geometry/plane.hpp"
+#include "../geometry/sphere.hpp"
+#include "../utils/math_utils.hpp"
 
-#define STB_IMAGE_WRITE_IMPLEMENTATION
-#include "stb/stb_image_write.h"
+extern "C" {
+	#define STB_IMAGE_WRITE_IMPLEMENTATION
+	#include "../../../stb/stb_image_write.h"
+}
 
 double Raytracer::RenderPng(const imageOptions& imgOps, const Scene& scene, const char* filePath, const bool useSingleThread)
 {
@@ -19,7 +21,10 @@ double Raytracer::RenderPng(const imageOptions& imgOps, const Scene& scene, cons
 	renderOptions renderOps(imgOps, height, scene, 0, height, data, dataMutex);
 
 	double elapsedSecs = Render(renderOps, data, useSingleThread);
-	stbi_write_png(filePath, renderOps.imgOps.width, height, colourChannels, data, renderOps.imgOps.width * colourChannels);
+	int result = stbi_write_png(filePath, renderOps.imgOps.width, height, colourChannels, data, renderOps.imgOps.width * colourChannels);
+	if (!result) {
+		std::cerr << "Failed writing image to " << filePath << std::endl;
+	}
 
 	delete[] data;
 	return elapsedSecs;
