@@ -2,44 +2,39 @@
 
 #include "sphere.hpp"
 
-Sphere::Sphere() : centre(Point3()), radius(0.0) {}
-Sphere::Sphere(const Point3 centre, const double radius, std::shared_ptr<Material> material) : centre(centre), radius(radius), material(material) {}
+Sphere::Sphere(): centre(Point3()), radius(0.0) {}
+Sphere::Sphere(const Point3 centre, const double radius, std::shared_ptr<Material> material): centre(centre), radius(radius), material(material) {}
 
-inline bool TryGetClosestRoot(const double discriminant, const double halfB, const double a, const double tMin, const double tMax, double& root)
-{
-	double discriminantSqrt = std::sqrt(discriminant);
-	root = (-halfB - discriminantSqrt) / a;
+inline bool tryGetClosestRoot(const double discriminant, const double half_b, const double a, const double t_min, const double t_max, double& root) {
+  double discriminant_sqrt = std::sqrt(discriminant);
+  root = (-half_b - discriminant_sqrt) / a;
 
-	if (!InBoundsInclusive(root, tMin, tMax))
-	{
-		root = (-halfB + discriminantSqrt) / a;
-		if (!InBoundsInclusive(root, tMin, tMax))
-		{
-			root = 0.0;
-			return false;
-		}
-	}
-	return true;
+  if (!in_bounds_inclusive(root, t_min, t_max)) {
+    root = (-half_b + discriminant_sqrt) / a;
+    if (!in_bounds_inclusive(root, t_min, t_max)) {
+      root = 0.0;
+      return false;
+    }
+  }
+  return true;
 }
 
-bool Sphere::IsHit(const Ray& ray, const double tMin, const double tMax, HitRecord& hitRecord) const
-{
-	Vector3 oc = ray.origin - centre;
-	double a = ray.direction.lengthSqr();
-	double halfB = dot(oc, ray.direction);
-	double c = oc.lengthSqr() - radius * radius;
-	double discriminant = halfB * halfB - a * c;
+bool Sphere::is_hit(const Ray& ray, const double t_min, const double t_max, HitRecord& hit_record) const {
+  Vector3 oc = ray.origin - centre;
+  double a = ray.direction.length_sqr();
+  double half_b = dot(oc, ray.direction);
+  double c = oc.length_sqr() - radius * radius;
+  double discriminant = half_b * half_b - a * c;
 
-	double root;
-	if (discriminant >= 0.0 && TryGetClosestRoot(discriminant, halfB, a, tMin, tMax, root))
-	{
-		hitRecord.t = root;
-		hitRecord.point = ray.at(root);
-		Vector3 outwardNormal = (hitRecord.point - centre) / radius;
-		hitRecord.SetFaceNormal(ray, outwardNormal);
-		hitRecord.material = material;
+  double root;
+  if (discriminant >= 0.0 && tryGetClosestRoot(discriminant, half_b, a, t_min, t_max, root)) {
+    hit_record.t = root;
+    hit_record.point = ray.at(root);
+    Vector3 outward_normal = (hit_record.point - centre) / radius;
+    hit_record.set_face_normal(ray, outward_normal);
+    hit_record.material = material;
 
-		return true;
-	}
-	return false;
+    return true;
+  }
+  return false;
 }

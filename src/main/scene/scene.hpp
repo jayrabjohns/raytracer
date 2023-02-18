@@ -7,21 +7,20 @@
 #include "../geometry/hittable.hpp"
 #include "camera.hpp"
 
-class Scene
-{
+class Scene {
 public:
-	std::shared_ptr<Camera> camera;
-	std::vector<std::shared_ptr<Hittable>> objects;
+  std::shared_ptr<Camera> camera;
+  std::vector<std::shared_ptr<Hittable>> objects;
 
 public:
-	Scene();
-	Scene(const std::shared_ptr<Camera> camera);
+  Scene();
+  Scene(const std::shared_ptr<Camera> camera);
 
-	void Clear();
-	void Add(const std::shared_ptr<Hittable> hittable);
-	void Add(const std::shared_ptr<Camera> camera);
+  void clear();
+  void add(const std::shared_ptr<Hittable> hittable);
+  void add(const std::shared_ptr<Camera> camera);
 
-	virtual bool IsHit(const Ray& ray, const double tMin, const double tMax, HitRecord& hitRecord) const;
+  virtual bool is_hit(const Ray& ray, const double t_min, const double t_max, HitRecord& hit_record) const;
 };
 
 #endif

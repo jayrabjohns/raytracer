@@ -11,99 +11,89 @@
 
 // #include "../geometry/sphere.hpp"
 
-std::shared_ptr<Sphere> GenRandomSphere(double x, double y, double z, double xLeeway, double yLeeway, double zLeeway, double radius)
-{
-	Point3 centre(x + xLeeway * RandomDouble01(), y + yLeeway * RandomDouble01(), z + zLeeway * RandomDouble01());
+std::shared_ptr<Sphere> gen_random_sphere(double x, double y, double z, double x_leeway, double y_leeway, double z_leeway, double radius) {
+  Point3 centre(x + x_leeway * random_double_01(), y + y_leeway * random_double_01(), z + z_leeway * random_double_01());
 
-	double chooseMat = RandomDouble01();
-	if (chooseMat <= 0.80)
-	{
-		Colour albedo = Colour::Random01() * Colour::Random01();
-		auto sphereMat = std::make_shared<DiffuseLambert>(albedo);
-		return std::make_shared<Sphere>(centre, radius, sphereMat);
-	}
-	else if (chooseMat <= 0.95)
-	{
-		Colour albedo = Colour::Random(0.5, 1.0);
-		double fuzz = RandomDouble(0.0, 0.5);
-		auto sphereMat = std::make_shared<Metal>(albedo, fuzz);
-		return std::make_shared<Sphere>(centre, radius, sphereMat);
-	}
-	else
-	{
-		auto sphereMat = std::make_shared<Dielectric>(RandomDouble(0.5, 1.5));
-		return std::make_shared<Sphere>(centre, radius, sphereMat);
-	}
+  double choose_mat = random_double_01();
+  if (choose_mat <= 0.80) {
+    Colour albedo = Colour::random_01() * Colour::random_01();
+    auto sphere_mat = std::make_shared<DiffuseLambert>(albedo);
+    return std::make_shared<Sphere>(centre, radius, sphere_mat);
+  }
+  else if (choose_mat <= 0.95) {
+    Colour albedo = Colour::random(0.5, 1.0);
+    double fuzz = random_double(0.0, 0.5);
+    auto sphere_mat = std::make_shared<Metal>(albedo, fuzz);
+    return std::make_shared<Sphere>(centre, radius, sphere_mat);
+  }
+  else {
+    auto sphere_mat = std::make_shared<Dielectric>(random_double(0.5, 1.5));
+    return std::make_shared<Sphere>(centre, radius, sphere_mat);
+  }
 }
 
-void RandomScene(Scene& scene)
-{
-	// Camera
-	Point3 lookFrom = Point3(13.0, 2.0, 3.0);
-	Point3 lookAt = Point3(0.0, 0.0, 0.0);
-	Point3 camUp = Point3(0.0, 1.0, 0.0);
-	double vFov = 20.0;
-	double aspectRatio = 3.0 / 2.0;
-	double aperture = 0.1;
-	double distToFocus = 10.0;
+void random_scene(Scene& scene) {
+  // Camera
+  Point3 look_from = Point3(13.0, 2.0, 3.0);
+  Point3 look_at = Point3(0.0, 0.0, 0.0);
+  Point3 cam_up = Point3(0.0, 1.0, 0.0);
+  double v_fov = 20.0;
+  double aspect_ratio = 3.0 / 2.0;
+  double aperture = 0.1;
+  double dist_to_focus = 10.0;
 
-	scene.camera.get()->Init(lookFrom, lookAt, camUp, vFov, aspectRatio, aperture, distToFocus, 0.0, infinity);
+  scene.camera.get()->init(look_from, look_at, cam_up, v_fov, aspect_ratio, aperture, dist_to_focus, 0.0, infinity);
 
-	// Scene
-	auto groundMat = std::make_shared<DiffuseLambert>(Colour(0.5, 0.5, 0.5));
-	auto ground = std::make_shared<Sphere>(Point3(0.0, -1000.0, 0.0), 1000.0, groundMat);
-	scene.Add(ground);
+  // Scene
+  auto ground_mat = std::make_shared<DiffuseLambert>(Colour(0.5, 0.5, 0.5));
+  auto ground = std::make_shared<Sphere>(Point3(0.0, -1000.0, 0.0), 1000.0, ground_mat);
+  scene.add(ground);
 
-	for (int x = -11; x < 11; ++x)
-	{
-		for (int z = -11; z < 11; ++z)
-		{
-			auto randomSphere = GenRandomSphere(x, 0.2, z, 0.9, 0.0, 0.9, 0.2);
-			if ((randomSphere.get()->centre - Point3(4.0, 0.2, 0.0)).length() > 0.9) 
-			{
-				scene.Add(randomSphere);
-			}
-		}
-	}
+  for (int x = -11; x < 11; ++x) {
+    for (int z = -11; z < 11; ++z) {
+      auto random_sphere = gen_random_sphere(x, 0.2, z, 0.9, 0.0, 0.9, 0.2);
+      if ((random_sphere.get()->centre - Point3(4.0, 0.2, 0.0)).length() > 0.9) {
+        scene.add(random_sphere);
+      }
+    }
+  }
 
-	auto mat1 = std::make_shared<Dielectric>(1.5);
-	auto sphere1 = std::make_shared<Sphere>(Point3(0.0, 1.0, 0.0), 1.0, mat1);
-	scene.Add(sphere1);
+  auto mat1 = std::make_shared<Dielectric>(1.5);
+  auto sphere1 = std::make_shared<Sphere>(Point3(0.0, 1.0, 0.0), 1.0, mat1);
+  scene.add(sphere1);
 
-	auto mat2 = std::make_shared<DiffuseLambert>(Colour(0.4, 0.2, 0.1));
-	auto sphere2 = std::make_shared<Sphere>(Point3(-4.0, 1.0, 0.0), 1.0, mat2);
-	scene.Add(sphere2);
+  auto mat2 = std::make_shared<DiffuseLambert>(Colour(0.4, 0.2, 0.1));
+  auto sphere2 = std::make_shared<Sphere>(Point3(-4.0, 1.0, 0.0), 1.0, mat2);
+  scene.add(sphere2);
 
-	auto mat3 = std::make_shared<Metal>(Colour(0.7, 0.6, 0.5), 0.0);
-	auto sphere3 = std::make_shared<Sphere>(Point3(4.0, 1.0, 0.0), 1.0, mat3);
-	scene.Add(sphere3);
+  auto mat3 = std::make_shared<Metal>(Colour(0.7, 0.6, 0.5), 0.0);
+  auto sphere3 = std::make_shared<Sphere>(Point3(4.0, 1.0, 0.0), 1.0, mat3);
+  scene.add(sphere3);
 }
 
-void DemoScene(Scene& scene)
-{
-	auto groundMat = std::make_shared<DiffuseLambert>(Colour(0.8, 0.8, 0.0));
-	//auto backMat = std::make_shared<DiffuseLambert>(Colour(0.7, 0.3, 0.3));
-	auto centreMat = std::make_shared<Dielectric>(1.5);
-	auto leftMat = std::make_shared<Metal>(Colour(0.8, 0.8, 0.8), 0.8);
-	auto rightMat = std::make_shared<Metal>(Colour(0.8, 0.6, 0.2));
+void demo_scene(Scene& scene) {
+  auto ground_mat = std::make_shared<DiffuseLambert>(Colour(0.8, 0.8, 0.0));
+  //auto backMat = std::make_shared<DiffuseLambert>(Colour(0.7, 0.3, 0.3));
+  auto centre_mat = std::make_shared<Dielectric>(1.5);
+  auto left_mat = std::make_shared<Metal>(Colour(0.8, 0.8, 0.8), 0.8);
+  auto right_mat = std::make_shared<Metal>(Colour(0.8, 0.6, 0.2));
 
-	scene.Add(std::make_shared<Sphere>(Point3(0.0, -100.5, -1.0), 100.0, groundMat));
-	//scene.Add(std::make_shared<Sphere>(Point3(0.0, 0.0, -1.2), 0.5, backMat));
-	scene.Add(std::make_shared<Sphere>(Point3(0.0, 0.0, -1.0), 0.5, centreMat));
-	scene.Add(std::make_shared<Sphere>(Point3(0.0, 0.0, -1.0), -0.4, centreMat));
-	scene.Add(std::make_shared<Sphere>(Point3(-1.0, 0.0, -1.0), 0.5, leftMat));
-	scene.Add(std::make_shared<Sphere>(Point3(1.0, 0.0, -1.0), 0.5, rightMat));
+  scene.add(std::make_shared<Sphere>(Point3(0.0, -100.5, -1.0), 100.0, ground_mat));
+  //scene.add(std::make_shared<Sphere>(Point3(0.0, 0.0, -1.2), 0.5, backMat));
+  scene.add(std::make_shared<Sphere>(Point3(0.0, 0.0, -1.0), 0.5, centre_mat));
+  scene.add(std::make_shared<Sphere>(Point3(0.0, 0.0, -1.0), -0.4, centre_mat));
+  scene.add(std::make_shared<Sphere>(Point3(-1.0, 0.0, -1.0), 0.5, left_mat));
+  scene.add(std::make_shared<Sphere>(Point3(1.0, 0.0, -1.0), 0.5, right_mat));
 }
 
-void RedGreenScene(Scene& scene)
-{
-	auto leftMat = std::make_shared<DiffuseLambert>(Colour(0.0, 0.0, 1.0));
-	auto rightMat = std::make_shared<DiffuseLambert>(Colour(1.0, 0.0, 0.0));
+void red_green_scene(Scene& scene) {
+  auto left_mat = std::make_shared<DiffuseLambert>(Colour(0.0, 0.0, 1.0));
+  auto right_mat = std::make_shared<DiffuseLambert>(Colour(1.0, 0.0, 0.0));
 
-	double r = cos(pi / 4.0);
+  double r = cos(pi / 4.0);
 
-	scene.Add(std::make_shared<Sphere>(Point3(-r, 0.0, -1.0), r, leftMat));
-	scene.Add(std::make_shared<Sphere>(Point3(r, 0.0, -1.0), r, rightMat));
+  scene.add(std::make_shared<Sphere>(Point3(-r, 0.0, -1.0), r, left_mat));
+  scene.add(std::make_shared<Sphere>(Point3(r, 0.0, -1.0), r, right_mat));
 }
 
 #endif

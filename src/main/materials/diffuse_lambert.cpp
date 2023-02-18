@@ -1,17 +1,16 @@
 #include "diffuse_lambert.hpp"
 #include "../geometry/sphere.hpp"
 
-DiffuseLambert::DiffuseLambert(const Colour& albedo) : albedo(albedo) {}
+DiffuseLambert::DiffuseLambert(const Colour& albedo): albedo(albedo) {}
 
-bool DiffuseLambert::Scatter(const Ray& ray, const HitRecord& hitRecord, Colour& attenuation, Ray& scattered) const
-{
-	Vector3 scatterDir = hitRecord.normal + Sphere::RandomPointInHemiSphere(hitRecord.normal);
+bool DiffuseLambert::scatter(const Ray& ray, const HitRecord& hit_record, Colour& attenuation, Ray& scattered) const {
+  Vector3 scatter_dir = hit_record.normal + Sphere::random_point_in_hemi_sphere(hit_record.normal);
 
-	if (scatterDir.isNearZero())
-		scatterDir = hitRecord.normal;
+  if (scatter_dir.is_near_zero())
+    scatter_dir = hit_record.normal;
 
-	scattered = Ray(hitRecord.point, scatterDir);
-	attenuation = albedo;
+  scattered = Ray(hit_record.point, scatter_dir);
+  attenuation = albedo;
 
-	return true;
+  return true;
 }

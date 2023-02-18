@@ -3,15 +3,14 @@
 
 #include "material.hpp"
 
-class Dielectric : public Material
-{
+class Dielectric: public Material {
 public:
-	double refractiveIndex;
+  double refractive_index;
 
 public:
-	Dielectric(const double refractiveIndex);
+  Dielectric(const double refractive_index);
 
-	virtual bool Scatter(const Ray& ray, const HitRecord& hitRecord, Colour& attenuation, Ray& scattered) const override;
+  virtual bool scatter(const Ray& ray, const HitRecord& hitRecord, Colour& attenuation, Ray& scattered) const override;
 };
 
 #endif

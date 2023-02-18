@@ -6,10 +6,9 @@
 
 struct HitRecord;
 
-class Material
-{
+class Material {
 public:
-	virtual bool Scatter(const Ray& ray, const HitRecord& hitRecord, Colour& attenuation, Ray& scattered) const = 0;
+  virtual bool scatter(const Ray& ray, const HitRecord& hit_record, Colour& attenuation, Ray& scattered) const = 0;
 };
 
 #endif

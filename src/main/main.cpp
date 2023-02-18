@@ -4,26 +4,24 @@
 #include "scene/demos.hpp"
 #include "scene/scene.hpp"
 
-const int expectedCppVersion = 201703;
+const int expected_cpp_version = 201703;
 
-int main()
-{
-	if (__cplusplus != expectedCppVersion) 
-	{
-		std::cerr << "Using incompatible version of C++. Expected " << expectedCppVersion << ", but the current version is "  << __cplusplus << std::endl;
-		return 1;
-	}
+int main() {
+  if (__cplusplus != expected_cpp_version) {
+    std::cerr << "Using incompatible version of C++. Expected " << expected_cpp_version << ", but the current version is " << __cplusplus << std::endl;
+    return 1;
+  }
 
-	imageOptions imageOps(200, 32, 50, 3);
+  ImageOptions img_ops(200, 32, 50, 3);
 
-	auto camera = std::make_shared<Camera>();
-	Scene scene = Scene(camera);
-	DemoScene(scene);
+  auto camera = std::make_shared<Camera>();
+  Scene scene = Scene(camera);
+  demo_scene(scene);
 
-	Raytracer raytracer = Raytracer();
-	double elapsedSecs = raytracer.RenderPng(imageOps, scene, "raytrace_out.png");
+  Raytracer raytracer = Raytracer();
+  double elapsed_secs = raytracer.render_png(img_ops, scene, "raytrace_out.png");
 
-	std::cout << "\nDone." << std::endl;
-	std::cout << "Total time: " << elapsedSecs << 's' << std::endl;
-	return 0;
+  std::cout << "\nDone." << std::endl;
+  std::cout << "Total time: " << elapsed_secs << 's' << std::endl;
+  return 0;
 }

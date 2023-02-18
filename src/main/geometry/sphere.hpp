@@ -6,42 +6,39 @@
 #include "hittable.hpp"
 #include "vec3.hpp"
 
-class Sphere : public Hittable
-{
+class Sphere: public Hittable {
 public:
-	Point3 centre;
-	double radius;
-	std::shared_ptr<Material> material;
+  Point3 centre;
+  double radius;
+  std::shared_ptr<Material> material;
 
 public:
-	Sphere();
-	Sphere(const Point3 centre, const double radius, std::shared_ptr<Material> material);
+  Sphere();
+  Sphere(const Point3 centre, const double radius, std::shared_ptr<Material> material);
 
-	virtual bool IsHit(const Ray& ray, const double tMin, const double tMax, HitRecord& hitRecord) const override;
+  virtual bool is_hit(const Ray& ray, const double t_min, const double t_max, HitRecord& hit_record) const override;
 
-	static Vector3 RandomPointOnUnitSphere()
-	{
-		return Normalise(RandomPointInUnitSphere());
-	}
+  static Vector3 random_point_on_unit_sphere() {
+    return normalise(random_point_in_unit_sphere());
+  }
 
-	static Vector3 RandomPointInUnitSphere()
-	{
-		while (true)
-		{
-			auto p = Vector3::Random(-1.0, 1.0);
-			if (p.lengthSqr() >= 1) continue;
-			return p;
-		}
-	}
+  static Vector3 random_point_in_unit_sphere() {
+    while (true) {
+      auto p = Vector3::random(-1.0, 1.0);
+      if (p.length_sqr() >= 1) continue;
+      return p;
+    }
+  }
 
-	static Vector3 RandomPointInHemiSphere(const Vector3& normal)
-	{
-		Vector3 pointInUnitSphere = RandomPointInUnitSphere();
-		if (dot(pointInUnitSphere, normal) > 0.0) // In the same hemisphere as the normal
-			return pointInUnitSphere;
-		else
-			return -pointInUnitSphere;
-	}
+  static Vector3 random_point_in_hemi_sphere(const Vector3& normal) {
+    Vector3 point_in_unit_sphere = random_point_in_unit_sphere();
+    if (dot(point_in_unit_sphere, normal) > 0.0) { // In the same hemisphere as the normal
+      return point_in_unit_sphere;
+    }
+    else {
+      return -1.0 * point_in_unit_sphere;
+    }
+  }
 };
 
 #endif

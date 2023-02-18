@@ -4,15 +4,14 @@
 #include "material.hpp"
 #include "../geometry/vec3.hpp"
 
-class DiffuseLambert : public Material
-{
+class DiffuseLambert: public Material {
 public:
-	Colour albedo;
+  Colour albedo;
 
 public:
-	DiffuseLambert(const Colour& albedo);
+  DiffuseLambert(const Colour& albedo);
 
-	virtual bool Scatter(const Ray& ray, const HitRecord& hitRecord, Colour& attenuation, Ray& scattered) const override;
+  virtual bool scatter(const Ray& ray, const HitRecord& hit_record, Colour& attenuation, Ray& scattered) const override;
 };
 
 #endif
