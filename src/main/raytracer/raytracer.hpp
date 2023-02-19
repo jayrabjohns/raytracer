@@ -1,32 +1,11 @@
 #ifndef RAYTRACER_H
 #define RAYTRACER_H
 
-#include <mutex>
-
+#include "image_options.hpp"
+#include "render_options.hpp"
 #include "../geometry/ray.hpp"
 #include "../scene/scene.hpp"
 #include "../scene/camera.hpp"
-
-struct ImageOptions {
-  const int width;
-  const int samples_per_pixel;
-  const int max_ray_bounces;
-  const int colour_channels;
-
-  ImageOptions(const int width, const int samples_per_pixel, const int max_ray_bounces, const int colour_channels): width(width), samples_per_pixel(samples_per_pixel), max_ray_bounces(max_ray_bounces), colour_channels(colour_channels) {}
-};
-
-struct RenderOptions {
-  const ImageOptions& img_ops;
-  const int height;
-  const Scene& scene;
-  int start_row;
-  int end_row;
-  uint8_t* data;
-  std::mutex& data_mutex;
-
-  RenderOptions(const ImageOptions& img_ops, int height, const Scene& scene, int start_row, int end_row, uint8_t* data, std::mutex& data_mutex): img_ops(img_ops), height(height), scene(scene), start_row(start_row), end_row(end_row), data(data), data_mutex(data_mutex) {}
-};
 
 class Raytracer {
 public:
