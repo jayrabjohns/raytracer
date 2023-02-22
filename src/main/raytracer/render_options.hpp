@@ -8,13 +8,15 @@
 
 struct RenderOptions {
   const ImageOptions& img_ops;
-  const int height;
   const Scene& scene;
-  int start_row;
-  int end_row;
-  uint8_t* data;
-  std::mutex& data_mutex;
+  const int start_row;
+  const int end_row;
 
-  RenderOptions(const ImageOptions& img_ops, int height, const Scene& scene, int start_row, int end_row, uint8_t* data, std::mutex& data_mutex): img_ops(img_ops), height(height), scene(scene), start_row(start_row), end_row(end_row), data(data), data_mutex(data_mutex) {}
+  RenderOptions(const ImageOptions& img_ops, const Scene& scene, const int start_row, const int end_row):
+    img_ops(img_ops),
+    scene(scene),
+    start_row(start_row),
+    end_row(end_row) {
+  }
 };
 #endif

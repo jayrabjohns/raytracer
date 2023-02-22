@@ -1,10 +1,8 @@
 #include "camera.hpp"
 #include "../utils/math_utils.hpp"
 
-Camera::Camera(): Camera::Camera(Point3(0.0, 0.0, 0.0), Point3(0.0, 0.0, -1.0), Vector3(0.0, 1.0, 0.0), 90.0, 16.0 / 9.0, 0.0, 1.0, 0.0, infinity) {}
-
-Camera::Camera(const Point3 origin, const Point3 look_at, const Vector3 cam_up, double vertical_fov_degs, double aspect_ratio, double aperture, double focus_dist, double near_clipping_plane, double far_clipping_plane) {
-  init(origin, look_at, cam_up, vertical_fov_degs, aspect_ratio, aperture, focus_dist, near_clipping_plane, far_clipping_plane);
+Camera::Camera() {
+  init(Point3(0.0, 0.0, 0.0), Point3(0.0, 0.0, -1.0), Vector3(0.0, 1.0, 0.0), 90.0, 16.0 / 9.0, 0.0, 1.0, 0.0, infinity);
 }
 
 void Camera::init(const Point3 origin, const Point3 look_at, const Vector3 cam_up, double vertical_fov_degs, double aspect_ratio, double aperture, double focus_dist, double near_clipping_plane, double far_clipping_plane) {

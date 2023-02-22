@@ -9,8 +9,6 @@
 #include "../materials/metal.hpp"
 #include "../materials/dielectric.hpp"
 
-// #include "../geometry/sphere.hpp"
-
 std::shared_ptr<Sphere> gen_random_sphere(double x, double y, double z, double x_leeway, double y_leeway, double z_leeway, double radius) {
   Point3 centre(x + x_leeway * random_double_01(), y + y_leeway * random_double_01(), z + z_leeway * random_double_01());
 
@@ -32,7 +30,7 @@ std::shared_ptr<Sphere> gen_random_sphere(double x, double y, double z, double x
   }
 }
 
-void random_scene(Scene& scene) {
+void populate_scene_random(Scene& scene) {
   // Camera
   Point3 look_from = Point3(13.0, 2.0, 3.0);
   Point3 look_at = Point3(0.0, 0.0, 0.0);
@@ -71,7 +69,7 @@ void random_scene(Scene& scene) {
   scene.add(sphere3);
 }
 
-void demo_scene(Scene& scene) {
+void populate_scene_demo(Scene& scene) {
   auto ground_mat = std::make_shared<DiffuseLambert>(Colour(0.8, 0.8, 0.0));
   //auto backMat = std::make_shared<DiffuseLambert>(Colour(0.7, 0.3, 0.3));
   auto centre_mat = std::make_shared<Dielectric>(1.5);
@@ -86,7 +84,7 @@ void demo_scene(Scene& scene) {
   scene.add(std::make_shared<Sphere>(Point3(1.0, 0.0, -1.0), 0.5, right_mat));
 }
 
-void red_green_scene(Scene& scene) {
+void populate_scene_red_green(Scene& scene) {
   auto left_mat = std::make_shared<DiffuseLambert>(Colour(0.0, 0.0, 1.0));
   auto right_mat = std::make_shared<DiffuseLambert>(Colour(1.0, 0.0, 0.0));
 
