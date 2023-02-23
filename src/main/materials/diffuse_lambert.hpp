@@ -6,12 +6,11 @@
 
 class DiffuseLambert: public Material {
 public:
-  Colour albedo;
+  const Colour albedo;
 
 public:
-  DiffuseLambert(const Colour& albedo);
+  DiffuseLambert(Colour albedo);
 
   virtual bool scatter(const Ray& ray, const HitRecord& hit_record, Colour& attenuation, Ray& scattered) const override;
 };
-
 #endif

@@ -1,13 +1,16 @@
 #include "scene.hpp"
 
 Scene::Scene() {}
+
 Scene::Scene(const std::shared_ptr<Camera> camera): camera(camera) {}
 
 void Scene::clear() {
   camera.reset();
   objects.clear();
 }
+
 void Scene::add(const std::shared_ptr<Hittable> hittable) { objects.push_back(hittable); }
+
 void Scene::add(const std::shared_ptr<Camera> camera) { this->camera = camera; }
 
 bool Scene::is_hit(const Ray& ray, const double t_min, const double t_max, HitRecord& hit_record) const {

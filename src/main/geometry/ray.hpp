@@ -10,8 +10,8 @@ public:
 
 public:
   Ray();
-  Ray(const Point3& origin, const Vector3& direction);
+  Ray(Point3 origin, Vector3 direction);
 
-  Point3 at(const double t) const;
+  Point3 at(double t) const;
 };
 #endif

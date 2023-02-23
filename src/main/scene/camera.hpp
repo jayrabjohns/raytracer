@@ -27,15 +27,14 @@ private:
 
 public:
   Camera();
-  void init(const Point3 origin, const Point3 look_at, const Vector3 cam_up, double vertical_fov_degs, double aspect_ratio, double aperture, double focus_dist, double near_clipping_plane, double far_clipping_plane);
+  void init(Point3 origin, Point3 look_at, Vector3 cam_up, double vertical_fov_degs, double aspect_ratio, double aperture, double focus_dist, double near_clipping_plane, double far_clipping_plane);
 
   Ray ray_at(double u, double v) const;
 
-  void set_origin(const Point3 origin);
-  void look_at(const Point3 point);
-  void set_cam_up(const Vector3 cam_up);
-  void set_vertical_fov(const double vfov);
-  void set_aspect_ratio(const double aspect_ratio);
+  void set_origin(Point3 origin);
+  void look_at(Point3 point);
+  void set_cam_up(Vector3 cam_up);
+  void set_vertical_fov(double vfov);
+  void set_aspect_ratio(double aspect_ratio);
 };
-
 #endif

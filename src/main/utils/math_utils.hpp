@@ -31,4 +31,8 @@ inline double clamp(double x, double min, double max) {
 inline double clamp_01(double x) {
   return clamp(x, 0.0, 1.0);
 }
+
+inline bool in_bounds_inclusive(const double val, const double min, const double max) {
+  return min <= val && val <= max;
+}
 #endif

@@ -12,7 +12,7 @@ public:
 
 public:
   Vector3();
-  Vector3(const double x, const double y, const double z);
+  Vector3(double x, double y, double z);
 
   double x() const;
   double y() const;
@@ -22,22 +22,28 @@ public:
   double length_sqr() const;
   Vector3 normalise() const;
   bool is_near_zero() const;
-  Vector3 reflect(const Vector3& normal);
-  Vector3 refract(const Vector3& normal, const double refractiveRatio);
+  Vector3 reflect(const Vector3& normal) const;
+  Vector3 refract(const Vector3& normal, double refractiveRatio) const;
 
-  double operator[](const int i) const;
-  double& operator[](const int i);
+  double operator[](int i) const;
   Vector3 operator-() const;
   Vector3& operator+=(const Vector3& vec3);
-  Vector3& operator*=(const double t);
+  Vector3& operator*=(double t);
   Vector3& operator*=(const Vector3& vec3);
-  Vector3& operator/=(const double t);
+  Vector3& operator/=(double t);
 
-  inline static Vector3 random_01() { return Vector3(random_double_01(), random_double_01(), random_double_01()); }
-  inline static Vector3 random(double min, double max) { return Vector3(random_double(min, max), random_double(min, max), random_double(min, max)); }
+  inline static Vector3 random_01() {
+    return Vector3(random_double_01(), random_double_01(), random_double_01());
+  }
+
+  inline static Vector3 random(double min, double max) {
+    return Vector3(random_double(min, max), random_double(min, max), random_double(min, max));
+  }
 };
 
-inline std::ostream& operator<<(std::ostream& out, const Vector3& vec3) { return out << vec3.values[0] << ' ' << vec3.values[1] << ' ' << vec3.values[2]; }
+inline std::ostream& operator<<(std::ostream& out, const Vector3& vec3) {
+  return out << vec3.values[0] << ' ' << vec3.values[1] << ' ' << vec3.values[2];
+}
 
 inline Vector3 operator+(const Vector3& a, const Vector3& b) {
   return Vector3(
@@ -60,18 +66,24 @@ inline Vector3 operator*(const Vector3& a, const Vector3& b) {
     a.values[2] * b.values[2]);
 }
 
-inline Vector3 operator*(const double scalar, const Vector3& vec3) {
+inline Vector3 operator*(double scalar, const Vector3& vec3) {
   return Vector3(
     scalar * vec3.values[0],
     scalar * vec3.values[1],
     scalar * vec3.values[2]);
 }
 
-inline Vector3 operator*(const Vector3& vec3, const double scalar) { return scalar * vec3; }
+inline Vector3 operator*(const Vector3& vec3, const double scalar) {
+  return scalar * vec3;
+}
 
-inline Vector3 operator/(Vector3 vec3, const double scalar) { return (1 / scalar) * vec3; }
+inline Vector3 operator/(Vector3 vec3, const double scalar) {
+  return (1 / scalar) * vec3;
+}
 
-inline double dot(const Vector3& a, const Vector3& b) { return a.values[0] * b.values[0] + a.values[1] * b.values[1] + a.values[2] * b.values[2]; }
+inline double dot(const Vector3& a, const Vector3& b) {
+  return a.values[0] * b.values[0] + a.values[1] * b.values[1] + a.values[2] * b.values[2];
+}
 
 inline Vector3 cross(const Vector3& a, const Vector3& b) {
   return Vector3(
@@ -80,11 +92,10 @@ inline Vector3 cross(const Vector3& a, const Vector3& b) {
     a.values[0] * b.values[1] - a.values[1] * b.values[0]);
 }
 
-inline Vector3 normalise(const Vector3 vec3) { return vec3 / vec3.length(); }
+inline Vector3 normalise(const Vector3 vec3) {
+  return vec3 / vec3.length();
+}
 
-//inline Vec3 RandomUnitVector() { return normalise(Sphere::random_point_in_unit_sphere());/*normalise(Vec3::random_01());*/ }
-
-// Type aliases
 using Point3 = Vector3; // 3D Point
 using Colour = Vector3; // RGB Colour
 #endif

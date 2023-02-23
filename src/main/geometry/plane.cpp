@@ -1,6 +1,10 @@
 #include "plane.hpp"
 
-Plane::Plane(const Point3& a, const Point3& b, const Point3& c): a(a), b(b), c(c) {}
+Plane::Plane(const Point3 a, const Point3 b, const Point3 c):
+  a(a),
+  b(b),
+  c(c) {
+}
 
 bool Plane::is_hit(const Ray& ray, const double t_min, const double t_max, HitRecord& hit_record) const {
   Vector3 plane_normal = -1.0 * cross(a - b, b - c);

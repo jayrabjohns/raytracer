@@ -5,12 +5,11 @@
 
 class Dielectric: public Material {
 public:
-  double refractive_index;
+  const double refractive_index;
 
 public:
-  Dielectric(const double refractive_index);
+  Dielectric(double refractive_index);
 
   virtual bool scatter(const Ray& ray, const HitRecord& hitRecord, Colour& attenuation, Ray& scattered) const override;
 };
-
 #endif

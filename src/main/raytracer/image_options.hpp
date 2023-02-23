@@ -8,7 +8,7 @@ struct ImageOptions {
   const int max_ray_bounces;
   const int colour_channels;
 
-  ImageOptions(const int width, const int height, const int samples_per_pixel, const int max_ray_bounces, const int colour_channels):
+  ImageOptions(int width, int height, int samples_per_pixel, int max_ray_bounces, int colour_channels):
     width(width),
     height(height),
     samples_per_pixel(samples_per_pixel),

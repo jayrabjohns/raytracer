@@ -12,7 +12,7 @@ struct RenderOptions {
   const int start_row;
   const int end_row;
 
-  RenderOptions(const ImageOptions& img_ops, const Scene& scene, const int start_row, const int end_row):
+  RenderOptions(const ImageOptions& img_ops, const Scene& scene, int start_row, int end_row):
     img_ops(img_ops),
     scene(scene),
     start_row(start_row),

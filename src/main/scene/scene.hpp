@@ -14,13 +14,12 @@ public:
 
 public:
   Scene();
-  Scene(const std::shared_ptr<Camera> camera);
+  Scene(std::shared_ptr<Camera> camera);
 
   void clear();
-  void add(const std::shared_ptr<Hittable> hittable);
-  void add(const std::shared_ptr<Camera> camera);
+  void add(std::shared_ptr<Hittable> hittable);
+  void add(std::shared_ptr<Camera> camera);
 
-  virtual bool is_hit(const Ray& ray, const double t_min, const double t_max, HitRecord& hit_record) const;
+  virtual bool is_hit(const Ray& ray, double t_min, double t_max, HitRecord& hit_record) const;
 };
-
 #endif

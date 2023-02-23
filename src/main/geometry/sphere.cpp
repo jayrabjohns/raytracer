@@ -2,10 +2,18 @@
 
 #include "sphere.hpp"
 
-Sphere::Sphere(): centre(Point3()), radius(0.0) {}
-Sphere::Sphere(const Point3 centre, const double radius, std::shared_ptr<Material> material): centre(centre), radius(radius), material(material) {}
+Sphere::Sphere():
+  centre(Point3()),
+  radius(0.0) {
+}
 
-inline bool tryGetClosestRoot(const double discriminant, const double half_b, const double a, const double t_min, const double t_max, double& root) {
+Sphere::Sphere(const Point3 centre, const double radius, const std::shared_ptr<Material> material):
+  centre(centre),
+  radius(radius),
+  material(material) {
+}
+
+bool tryGetClosestRoot(const double discriminant, const double half_b, const double a, const double t_min, const double t_max, double& root) {
   double discriminant_sqrt = std::sqrt(discriminant);
   root = (-half_b - discriminant_sqrt) / a;
 

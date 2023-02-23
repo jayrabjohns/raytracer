@@ -11,13 +11,13 @@ class Raytracer {
 public:
   Raytracer();
 
-  void render(const ImageOptions img_ops, const Scene scene, uint8_t* data) const;
-  void render_png(const ImageOptions& img_ops, const Scene& scene, const char* file_path, const bool use_single_thread = false) const;
+  void render(ImageOptions img_ops, Scene scene, uint8_t* data) const;
+  void render_png(const ImageOptions& img_ops, const Scene& scene, const char* out_path) const;
 
 private:
   unsigned int threads_num;
 
-  Colour get_ray_colour(const Ray& ray, const Scene& scene, const int max_depth) const;
+  Colour get_ray_colour(const Ray& ray, const Scene& scene, int max_depth) const;
   void render_chunk(RenderOptions render_ops, uint8_t* data) const;
 };
 #endif 

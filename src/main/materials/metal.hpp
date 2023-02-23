@@ -5,13 +5,12 @@
 
 class Metal: public Material {
 public:
-  Colour albedo;
-  double fuzziness;
+  const Colour albedo;
+  const double fuzziness;
 
 public:
-  Metal(const Colour& albedo);
-  Metal(const Colour& albedo, const double fuzzyness);
+  Metal(Colour albedo);
+  Metal(Colour albedo, double fuzzyness);
   virtual bool scatter(const Ray& ray, const HitRecord& hit_record, Colour& attenuation, Ray& scattered) const override;
 };
-
 #endif 

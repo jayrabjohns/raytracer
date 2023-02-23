@@ -1,8 +1,10 @@
 #include "dielectric.hpp"
 
-Dielectric::Dielectric(const double refractive_index): refractive_index(refractive_index) {}
+Dielectric::Dielectric(const double refractive_index):
+  refractive_index(refractive_index) {
+}
 
-double reflectance(double cosine, double refractive_index) {
+double reflectance(const double cosine, const double refractive_index) {
   // https://en.wikipedia.org/wiki/Schlick%27s_approximation
   double r0 = (1.0 - refractive_index) / (1.0 + refractive_index);
   r0 = r0 * r0;

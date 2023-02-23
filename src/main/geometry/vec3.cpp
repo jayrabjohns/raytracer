@@ -1,11 +1,25 @@
 #include "vec3.hpp"
 
-Vector3::Vector3(): Vector3(0.0, 0.0, 0.0) {}
-Vector3::Vector3(const double x, const double y, const double z): values{ x, y, z } {}
+Vector3::Vector3():
+  Vector3(0.0, 0.0, 0.0) {
+}
 
-double Vector3::x() const { return values[0]; }
-double Vector3::y() const { return values[1]; }
-double Vector3::z() const { return values[2]; }
+Vector3::Vector3(const double x, const double y, const double z):
+  values{ x, y, z } {
+}
+
+double Vector3::x() const {
+  return values[0];
+}
+
+double Vector3::y() const {
+  return values[1];
+}
+
+double Vector3::z() const {
+  return values[2];
+}
+
 
 double Vector3::length() const {
   return std::sqrt(Vector3::length_sqr());
@@ -34,11 +48,11 @@ bool Vector3::is_near_zero() const {
     fabs(values[2] < tolerance));
 }
 
-Vector3 Vector3::reflect(const Vector3& normal) {
+Vector3 Vector3::reflect(const Vector3& normal) const {
   return (*this) - 2.0 * dot((*this), normal) * normal;
 }
 
-Vector3 Vector3::refract(const Vector3& normal, const double refractive_ratio) {
+Vector3 Vector3::refract(const Vector3& normal, const double refractive_ratio) const {
   double cos_theta = fmin(dot(-(*this), normal), 1.0);
   Vector3 refracted_perpendicular = refractive_ratio * ((*this) + cos_theta * normal);
   Vector3 refractive_parallel = -sqrt(fabs(1.0 - refracted_perpendicular.length_sqr())) * normal;
@@ -46,10 +60,6 @@ Vector3 Vector3::refract(const Vector3& normal, const double refractive_ratio) {
 }
 
 double Vector3::operator[](const int i) const {
-  return values[i];
-}
-
-double& Vector3::operator[](const int i) {
   return values[i];
 }
 

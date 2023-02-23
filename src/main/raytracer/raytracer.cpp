@@ -13,32 +13,25 @@ extern "C" {
 #include "../../../stb/stb_image_write.h"
 }
 
-// #ifdef DEBUG
 #include "../../../perf/timer/timer_utils.hpp"
-// #endif
 
 Raytracer::Raytracer() {
   const unsigned int hardware_threads = std::thread::hardware_concurrency();
   this->threads_num = (hardware_threads == 0 ? 1 : hardware_threads);
 }
 
-void Raytracer::render_png(const ImageOptions& img_ops, const Scene& scene, const char* file_path, const bool use_single_thread) const {
+void Raytracer::render_png(const ImageOptions& img_ops, const Scene& scene, const char* out_path) const {
   const int colour_channels = 3;
   uint8_t* data = new uint8_t[img_ops.width * img_ops.height * colour_channels];
 
-#ifdef TIMER_ENABLED
   double elapsed_secs = timeFn([this, img_ops, data, scene]() {
     Raytracer::render(img_ops, scene, data);
-  });
+    });
   std::cout << "Render completed in " << elapsed_secs << 's' << std::endl;
-#else
-  render(render_ops, data, use_single_thread);
-  std::cout << "Render complete" << std::endl;
-#endif
 
-  const int result = stbi_write_png(file_path, img_ops.width, img_ops.height, colour_channels, data, img_ops.width * colour_channels);
+  const int result = stbi_write_png(out_path, img_ops.width, img_ops.height, colour_channels, data, img_ops.width * colour_channels);
   if (!result) {
-    std::cerr << "Failed writing image to " << file_path << std::endl;
+    std::cerr << "Failed writing image to " << out_path << std::endl;
   }
 
   delete[] data;
@@ -65,7 +58,7 @@ void Raytracer::render(const ImageOptions img_ops, const Scene scene, uint8_t* d
   delete[] threads;
 }
 
-void Raytracer::render_chunk(RenderOptions render_ops, uint8_t* data) const {
+void Raytracer::render_chunk(const RenderOptions render_ops, uint8_t* data) const {
   uint8_t* chunk_data = new uint8_t[(render_ops.end_row - render_ops.start_row) * render_ops.img_ops.width * render_ops.img_ops.colour_channels]; // Each thread uses its own buffer to avoid loads of locking / unlocking shenanigans
   int chunk_index = 0;
 

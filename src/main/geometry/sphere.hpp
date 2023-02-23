@@ -8,23 +8,23 @@
 
 class Sphere: public Hittable {
 public:
-  Point3 centre;
-  double radius;
-  std::shared_ptr<Material> material;
+  const Point3 centre;
+  const double radius;
+  const std::shared_ptr<Material> material;
 
 public:
   Sphere();
-  Sphere(const Point3 centre, const double radius, std::shared_ptr<Material> material);
+  Sphere(Point3 centre, double radius, std::shared_ptr<Material> material);
 
-  virtual bool is_hit(const Ray& ray, const double t_min, const double t_max, HitRecord& hit_record) const override;
+  virtual bool is_hit(const Ray& ray, double t_min, double t_max, HitRecord& hit_record) const override;
 
-  static Vector3 random_point_on_unit_sphere() {
+  static inline Vector3 random_point_on_unit_sphere() {
     return normalise(random_point_in_unit_sphere());
   }
 
   static Vector3 random_point_in_unit_sphere() {
     while (true) {
-      auto p = Vector3::random(-1.0, 1.0);
+      const auto p = Vector3::random(-1.0, 1.0);
       if (p.length_sqr() >= 1) continue;
       return p;
     }
@@ -40,5 +40,4 @@ public:
     }
   }
 };
-
 #endif
