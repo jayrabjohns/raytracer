@@ -13,7 +13,6 @@ struct ImageOptions {
     height(height),
     samples_per_pixel(samples_per_pixel),
     max_ray_bounces(max_ray_bounces),
-    colour_channels(colour_channels) {
-  }
+    colour_channels(colour_channels) {}
 };
 #endif

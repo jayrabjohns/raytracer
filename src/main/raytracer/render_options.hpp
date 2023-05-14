@@ -1,8 +1,6 @@
 #ifndef RENDER_OPTIONS_H
 #define RENDER_OPTIONS_H
 
-#include <mutex>
-
 #include "image_options.hpp"
 #include "../scene/scene.hpp"
 
@@ -16,7 +14,6 @@ struct RenderOptions {
     img_ops(img_ops),
     scene(scene),
     start_row(start_row),
-    end_row(end_row) {
-  }
+    end_row(end_row) {}
 };
 #endif
