@@ -2,9 +2,8 @@
 #define SINGLE_THREADED_CPU_RAYTRACER_H
 
 #include "./raytracer.hpp"
-#include "./execution_context.hpp"
 
-class SingleThreadedCPURaytracer: public Raytracer {
+class SingleThreadedCPURaytracer : public Raytracer {
 public:
   SingleThreadedCPURaytracer();
 

@@ -1,12 +1,24 @@
 #ifndef RAYTRACER_H
 #define RAYTRACER_H
 
-#include "image_options.hpp"
-#include "render_options.hpp"
-#include "execution_context.hpp"
 #include "../geometry/ray.hpp"
 #include "../scene/scene.hpp"
 #include "../scene/camera.hpp"
+
+struct ImageOptions {
+  const int width;
+  const int height;
+  const int samples_per_pixel;
+  const int max_ray_bounces;
+  const int colour_channels;
+
+  ImageOptions(int width, int height, int samples_per_pixel, int max_ray_bounces, int colour_channels) :
+    width(width),
+    height(height),
+    samples_per_pixel(samples_per_pixel),
+    max_ray_bounces(max_ray_bounces),
+    colour_channels(colour_channels) {}
+};
 
 class Raytracer {
 public:

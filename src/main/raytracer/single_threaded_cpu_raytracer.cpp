@@ -2,7 +2,7 @@
 #include "../utils/timer_utils.hpp"
 
 extern "C" {
-#include "../../../stb/stb_image_write.h"
+#include "stb_image_write.h"
 }
 
 SingleThreadedCPURaytracer::SingleThreadedCPURaytracer() {}
@@ -66,15 +66,13 @@ Colour SingleThreadedCPURaytracer::get_ray_colour(const Ray& ray, const Scene& s
   Colour attenuation;
   HitRecord hit_record;
   for (int depth = 0; depth < max_depth; ++depth) {
-    if (depth == max_depth) { return Colour(0.0, 0.0, 0.0); }
-    else if (scene.is_hit(r, 0.001, infinity, hit_record)) {
+    if (depth == max_depth) { return Colour(0.0, 0.0, 0.0); } else if (scene.is_hit(r, 0.001, infinity, hit_record)) {
       hit = true;
       if (hit_record.material->scatter(r, hit_record, attenuation, scattered)) {
         r = scattered;
         ray_colour *= attenuation;
       }
-    }
-    else break;
+    } else break;
   }
 
   return ray_colour;
