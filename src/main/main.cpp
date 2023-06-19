@@ -3,6 +3,7 @@
 
 #include "raytracer/raytracer.hpp"
 #include "raytracer/multi_threaded_cpu_raytracer.hpp"
+#include "raytracer/cuda_accelerated_raytracer.hpp"
 #include "scene/demos.hpp"
 #include "scene/scene.hpp"
 
@@ -21,8 +22,11 @@ int main() {
   Scene scene = Scene(camera);
   populate_scene_demo(scene);
 
-  const unsigned int num_hardware_threads = std::thread::hardware_concurrency();
-  auto raytracer = std::make_unique<MultiThreadedCPURaytracer>(num_hardware_threads);
+  // const unsigned int num_hardware_threads = std::thread::hardware_concurrency();
+  // auto raytracer = std::make_unique<MultiThreadedCPURaytracer>(num_hardware_threads);
+  // raytracer->render_png(img_ops, scene, "raytrace_out.png");
+
+  auto raytracer = std::make_unique<CudaAcceleratedRaytracer>();
   raytracer->render_png(img_ops, scene, "raytrace_out.png");
 
   std::cout << "\nDone." << std::endl;
